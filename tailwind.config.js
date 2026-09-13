@@ -9,6 +9,7 @@ export default {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         display: ['Instrument Serif', 'serif'],
+        brand: ['Playfair Display', 'serif'],
       },
       colors: {
         bg: "hsl(var(--bg))",

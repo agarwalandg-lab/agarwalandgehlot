@@ -61,6 +61,20 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="border-b border-stroke bg-bg py-20">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-10">
+          <FadeIn>
+            <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+              <div><p className="text-xs uppercase tracking-[0.3em] text-muted">A&amp;G Smart Advisory</p><h2 className="mt-4 max-w-2xl text-4xl font-display md:text-5xl">What are you looking for?</h2><p className="mt-4 max-w-xl leading-relaxed text-muted">Choose an objective and location to search the current A&amp;G property catalogue.</p></div>
+              <Link to="/property-finder" className="shrink-0 bg-text-primary px-7 py-4 text-center text-xs font-medium uppercase tracking-[0.14em] text-bg">Open Property Finder</Link>
+            </div>
+            <div className="mt-10 grid grid-cols-2 gap-px bg-stroke md:grid-cols-4">
+              {[['Buy', 'buy'], ['Rent', 'rent'], ['Sell', 'sell'], ['Talk to Agent', 'agent']].map(([label, value]) => <Link key={value} to={`/property-finder?requirement=${value}`} className="group flex min-h-28 items-center justify-between bg-bg p-5 text-lg uppercase transition-colors hover:bg-surface"><span>{label}</span><span className="transition-transform group-hover:translate-x-1">→</span></Link>)}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* Introduction Section */}
       <section className="bg-bg py-24 border-b border-stroke/50 overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-6 md:px-10">

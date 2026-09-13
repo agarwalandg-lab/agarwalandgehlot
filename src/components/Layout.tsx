@@ -2,18 +2,36 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Hls from 'hls.js';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
+import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi';
+import { services } from '../data/services';
+import Chatbot from './Chatbot';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() =>
+    typeof window === 'undefined' || window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+  const [isPropertyOpen, setIsPropertyOpen] = useState(false);
+  const [isMobilePropertyOpen, setIsMobilePropertyOpen] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const syncTheme = (event: MediaQueryListEvent) => setIsDark(event.matches);
+
+    setIsDark(mediaQuery.matches);
+    mediaQuery.addEventListener('change', syncTheme);
+    return () => mediaQuery.removeEventListener('change', syncTheme);
   }, []);
 
   useEffect(() => {
@@ -37,17 +55,43 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsServicesOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsPropertyOpen(false);
+    setIsMobilePropertyOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsServicesOpen(false);
+        setIsPropertyOpen(false);
+      }
+    };
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) setIsServicesOpen(false);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('mousedown', closeOnOutsideClick);
+    };
+  }, []);
 
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
     { name: 'Projects', path: '/projects' },
-    { name: 'Residential', path: '/residential' },
-    { name: 'Commercial', path: '/commercial' },
-    { name: 'Plots', path: '/plots' },
+    { name: 'Gallery', path: '/projects/gallery' },
     { name: 'Investment', path: '/investment' },
+  ];
+
+  const propertyItems = [
+    { name: 'Find a Property', path: '/property-finder', description: 'Get inventory-based recommendations' },
+    { name: 'Residential', path: '/residential', description: 'Premium homes and established communities' },
+    { name: 'Commercial', path: '/commercial', description: 'Office, retail and investment spaces' },
+    { name: 'Plots', path: '/plots', description: 'Residential and commercial land opportunities' },
   ];
 
   return (
@@ -57,7 +101,7 @@ const Navbar = () => {
         <Link to="/" className="group relative w-10 h-10 rounded-full cursor-pointer flex items-center justify-center overflow-hidden hover:scale-110 transition-transform">
           <div className="absolute inset-0 accent-gradient group-hover:rotate-180 transition-transform duration-700" style={{ padding: '2px' }}>
             <div className="w-full h-full bg-bg rounded-full flex items-center justify-center">
-              <span className="font-display text-[14px] text-text-primary">A&G</span>
+              <span className="font-brand text-[14px] font-semibold text-text-primary">A&amp;G</span>
             </div>
           </div>
         </Link>
@@ -77,17 +121,58 @@ const Navbar = () => {
               </Link>
             )
           })}
+          <div className="relative" onMouseEnter={() => setIsPropertyOpen(true)} onMouseLeave={() => setIsPropertyOpen(false)}>
+            <button type="button" onClick={() => setIsPropertyOpen((open) => !open)} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors sm:text-sm ${propertyItems.some((item) => location.pathname === item.path) ? 'bg-stroke/50 text-text-primary' : 'text-muted hover:bg-stroke/50 hover:text-text-primary'}`} aria-expanded={isPropertyOpen} aria-haspopup="true">
+              Property <FiChevronDown className={`transition-transform duration-300 ${isPropertyOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence>
+              {isPropertyOpen && (
+                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }} className="absolute left-1/2 top-full mt-3 w-72 -translate-x-1/2 border border-stroke bg-bg/95 p-2 shadow-2xl backdrop-blur-xl">
+                  {propertyItems.map((item) => (
+                    <Link key={item.path} to={item.path} className="group block border-b border-stroke px-4 py-4 last:border-0 hover:bg-surface">
+                      <span className="flex items-center justify-between text-sm text-text-primary">{item.name}<span className="transition-transform group-hover:translate-x-1">→</span></span>
+                      <span className="mt-1 block text-xs leading-relaxed text-muted">{item.description}</span>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div ref={servicesRef} className="relative" onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}>
+            <button type="button" onClick={() => setIsServicesOpen((open) => !open)} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors sm:text-sm ${location.pathname.startsWith('/services') ? 'bg-stroke/50 text-text-primary' : 'text-muted hover:bg-stroke/50 hover:text-text-primary'}`} aria-expanded={isServicesOpen} aria-haspopup="true">
+              Services <FiChevronDown className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence>
+              {isServicesOpen && (
+                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="fixed left-1/2 top-[76px] w-[min(1100px,calc(100vw-48px))] -translate-x-1/2 border border-stroke bg-bg/95 p-7 shadow-2xl backdrop-blur-xl">
+                  <div className="grid grid-cols-[1fr_1fr_0.9fr] gap-8">
+                    {(['Buy & Sell', 'Advisory'] as const).map((group) => (
+                      <div key={group}>
+                        <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-muted">{group}</p>
+                        {services.filter((service) => service.group === group).map((service) => (
+                          <Link key={service.slug} to={`/services/${service.slug}`} className="group/item block border-t border-stroke px-2 py-3 transition-colors hover:bg-surface">
+                            <span className="flex items-center justify-between text-sm">{service.menuTitle}<span className="-translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100">→</span></span>
+                            <span className="mt-1 block text-xs leading-relaxed text-muted">{service.shortDescription}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                    <div className="bg-surface p-6">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-muted">Private Property Consultation</p>
+                      <h3 className="mt-5 text-3xl font-display">Not sure where to start?</h3>
+                      <p className="mt-4 text-sm leading-relaxed text-muted">Receive a curated shortlist based on your budget, location and objective.</p>
+                      <Link to="/services/property-consultation" className="mt-7 block bg-text-primary px-5 py-3 text-center text-xs uppercase tracking-[0.14em] text-bg">Book Consultation</Link>
+                      <Link to="/services" className="mt-3 block text-center text-xs uppercase tracking-[0.14em] text-muted">View All Services</Link>
+                    </div>
+                  </div>
+                  <div className="mt-5 grid grid-cols-3 gap-2 border-t border-stroke pt-5">
+                    {services.filter((service) => service.group === 'Support').map((service) => <Link key={service.slug} to={`/services/${service.slug}`} className="text-xs text-muted transition-colors hover:text-text-primary">{service.menuTitle} →</Link>)}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-
-        <div className="w-px h-5 bg-stroke mx-2 hidden md:block"></div>
-
-        <button
-          onClick={() => setIsDark(!isDark)}
-          className="relative text-xs sm:text-sm rounded-full px-3 py-1.5 text-text-primary hover:text-text-primary hover:bg-stroke/50 transition-colors flex items-center gap-2"
-          aria-label="Toggle theme"
-        >
-          {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
-        </button>
 
         <div className="w-px h-5 bg-stroke mx-2 hidden md:block"></div>
 
@@ -124,6 +209,23 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            <button type="button" onClick={() => setIsMobilePropertyOpen((open) => !open)} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm text-text-primary" aria-expanded={isMobilePropertyOpen}>
+              Property <FiChevronDown className={`transition-transform ${isMobilePropertyOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence initial={false}>
+              {isMobilePropertyOpen && <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden border-l border-stroke pl-3">
+                {propertyItems.map((item) => <Link key={item.path} to={item.path} className="block rounded-lg px-4 py-2.5 text-sm text-muted">{item.name}</Link>)}
+              </motion.div>}
+            </AnimatePresence>
+            <button type="button" onClick={() => setIsMobileServicesOpen((open) => !open)} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm text-text-primary" aria-expanded={isMobileServicesOpen}>
+              Services <FiChevronDown className={`transition-transform ${isMobileServicesOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence initial={false}>
+              {isMobileServicesOpen && <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden border-l border-stroke pl-3">
+                {services.map((service) => <Link key={service.slug} to={`/services/${service.slug}`} className="block rounded-lg px-4 py-2.5 text-sm text-muted">{service.menuTitle}</Link>)}
+                <Link to="/services" className="block px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-primary">View All Services →</Link>
+              </motion.div>}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
@@ -211,6 +313,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </AnimatePresence>
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 }

@@ -6,10 +6,22 @@
   :root {
     --bg: 0 0% 4%;
     --surface: 0 0% 8%;
-    --text: 0 0% 100%;
-    --muted: 0 0% 100%;
+    --text: 0 0% 96%;
+    --muted: 0 0% 53%;
     --stroke: 0 0% 12%;
     --accent: 0 0% 96%;
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: 0 0% 98%;
+      --surface: 0 0% 92%;
+      --text: 0 0% 8%;
+      --muted: 0 0% 40%;
+      --stroke: 0 0% 80%;
+      color-scheme: light;
+    }
   }
 
   body {

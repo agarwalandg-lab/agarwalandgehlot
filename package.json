@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node --env-file=.env server.mjs",
+    "start": "node --env-file=.env server.mjs"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",

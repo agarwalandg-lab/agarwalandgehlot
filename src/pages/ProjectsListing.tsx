@@ -1,13 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCheck, FiHeart, FiSearch, FiX } from 'react-icons/fi';
-import { Project, projects } from '../data/projects';
+import { Project } from '../data/projects';
+import { useProjects } from '../data/projectStore';
 
-const cities = ['All Cities', ...Array.from(new Set(projects.map((project) => {
-  const parts = project.location.split(',');
-  return parts[parts.length - 1].trim() || project.location;
-})))];
-const developers = ['All Developers', ...Array.from(new Set(projects.map((project) => project.developer)))];
 const configurations = ['All Configurations', '2 BHK', '3 BHK', '4 BHK', '5 BHK', 'Penthouse', 'Duplex', 'Office', 'Retail'];
 const inputClass = 'h-12 w-full border border-stroke bg-bg px-4 text-sm text-text-primary outline-none focus:border-text-primary';
 
@@ -37,6 +33,9 @@ function ProjectCard({ project, selected, saved, onCompare, onSave }: { project:
 }
 
 export default function ProjectsListing() {
+  const { projects } = useProjects();
+  const cities = ['All Cities', ...Array.from(new Set(projects.map((project) => { const parts = project.location.split(','); return parts[parts.length - 1].trim() || project.location; })))];
+  const developers = ['All Developers', ...Array.from(new Set(projects.map((project) => project.developer)))];
   const [search, setSearch] = useState('');
   const [city, setCity] = useState('All Cities');
   const [developer, setDeveloper] = useState('All Developers');
@@ -57,7 +56,7 @@ export default function ProjectsListing() {
       return (!query || text.includes(query)) && (city === 'All Cities' || project.location.endsWith(city)) && (developer === 'All Developers' || project.developer === developer) && statusMatch && (configuration === 'All Configurations' || project.configurations.toLowerCase().includes(configuration.toLowerCase()));
     });
     return sort === 'Possession' ? [...matches].sort((a, b) => a.possession.localeCompare(b.possession)) : sort === 'Newest' ? [...matches].sort((a, b) => Number(/new|under/i.test(`${b.type} ${b.status}`)) - Number(/new|under/i.test(`${a.type} ${a.status}`))) : matches;
-  }, [search, city, developer, status, configuration, sort]);
+  }, [projects, search, city, developer, status, configuration, sort]);
 
   const clear = () => { setSearch(''); setCity('All Cities'); setDeveloper('All Developers'); setStatus('All Statuses'); setConfiguration('All Configurations'); setSort('Recommended'); };
   const toggleCompare = (slug: string) => setCompare((current) => current.includes(slug) ? current.filter((item) => item !== slug) : current.length < 3 ? [...current, slug] : current);
@@ -67,7 +66,7 @@ export default function ProjectsListing() {
   return <main className="min-h-screen bg-bg pb-28 pt-32">
     <section className="mx-auto max-w-[1400px] px-6 md:px-10">
       <div className="border-b border-stroke pb-14 text-center"><p className="mb-5 text-xs uppercase tracking-[0.3em] text-muted">A&amp;G Portfolio</p><h1 className="mx-auto max-w-4xl text-5xl font-display leading-tight md:text-7xl">Find a Home That Fits Your Vision.</h1><p className="mx-auto mt-6 max-w-2xl leading-relaxed text-muted">Explore a curated portfolio of premium residences and investment opportunities across Delhi NCR.</p><Link to="/projects/gallery" className="mt-7 inline-block border-b border-text-primary pb-1 text-xs uppercase tracking-[0.18em]">Open Project Gallery</Link></div>
-      <div className="sticky top-20 z-30 mt-8 border border-stroke bg-bg/95 p-4 backdrop-blur-xl">
+      <div className="sticky top-20 z-30 mt-8 border border-stroke bg-black/95 p-4 backdrop-blur-xl">
         <div className="relative"><FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" /><input value={search} onChange={(event) => setSearch(event.target.value)} className={`${inputClass} pl-11`} placeholder="Search project, sector, developer or location" /></div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <select value={city} onChange={(event) => setCity(event.target.value)} className={inputClass}>{cities.map((item) => <option key={item}>{item}</option>)}</select>

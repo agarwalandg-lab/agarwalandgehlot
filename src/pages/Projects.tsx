@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
-import { projects } from "../data/projects";
+import { useProjects } from '../data/projectStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
+  const { projects } = useProjects();
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -64,8 +65,8 @@ export default function Projects() {
               <div key={i} className={`parallax-item pointer-events-auto ${i % 2 === 0 ? 'mt-48 md:mt-96' : ''}`}>
                 <Link to={`/projects/${proj.slug}`} className="block aspect-square max-w-[320px] mx-auto bg-surface border border-stroke rounded-3xl rotate-[-2deg] hover:rotate-0 hover:scale-105 transition-all duration-500 cursor-pointer overflow-hidden relative group">
                   <img src={proj.image} alt={proj.title} className="absolute inset-0 h-full w-full object-cover" />
-                  <div className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none" style={{ background: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '4px 4px' }}></div>
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500"></div>
+                  <div className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none" style={{ background: 'radial-gradient(circle, hsl(var(--bg)) 1px, transparent 1px)', backgroundSize: '4px 4px' }}></div>
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
                   <div className="absolute bottom-6 left-6 right-6">
                     <h3 className="text-2xl font-display text-white drop-shadow-md">{proj.title}</h3>
                     <p className="text-xs text-white/80 uppercase tracking-widest mt-1 drop-shadow-md">{proj.type}</p>

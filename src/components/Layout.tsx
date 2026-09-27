@@ -8,9 +8,6 @@ import Chatbot from './Chatbot';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(() =>
-    typeof window === 'undefined' || window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
@@ -24,34 +21,6 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const syncTheme = (event: MediaQueryListEvent) => setIsDark(event.matches);
-
-    setIsDark(mediaQuery.matches);
-    mediaQuery.addEventListener('change', syncTheme);
-    return () => mediaQuery.removeEventListener('change', syncTheme);
-  }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.style.colorScheme = 'dark';
-      root.style.setProperty('--bg', '0 0% 4%');
-      root.style.setProperty('--surface', '0 0% 8%');
-      root.style.setProperty('--text', '0 0% 96%');
-      root.style.setProperty('--muted', '0 0% 53%');
-      root.style.setProperty('--stroke', '0 0% 12%');
-    } else {
-      root.style.colorScheme = 'light';
-      root.style.setProperty('--bg', '0 0% 98%');
-      root.style.setProperty('--surface', '0 0% 92%');
-      root.style.setProperty('--text', '0 0% 8%');
-      root.style.setProperty('--muted', '0 0% 40%');
-      root.style.setProperty('--stroke', '0 0% 80%');
-    }
-  }, [isDark]);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -96,12 +65,13 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
+      {/* Navbar pill */}
       <div className={`glass-nav inline-flex items-center rounded-full border border-white/20 px-2 py-2 transition-shadow duration-300 ${scrolled ? 'shadow-lg shadow-black/20' : ''}`}>
         
         <Link to="/" className="group relative w-10 h-10 rounded-full cursor-pointer flex items-center justify-center overflow-hidden hover:scale-110 transition-transform">
           <div className="absolute inset-0 accent-gradient group-hover:rotate-180 transition-transform duration-700" style={{ padding: '2px' }}>
-            <div className="w-full h-full bg-bg rounded-full flex items-center justify-center">
-              <span className="font-brand text-[14px] font-semibold text-text-primary">A&amp;G</span>
+            <div className="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden">
+              <img src="/logos/ag-logo.png" alt="A&G Logo" className="w-full h-full object-contain p-[2px]" />
             </div>
           </div>
         </Link>
@@ -121,56 +91,19 @@ const Navbar = () => {
               </Link>
             )
           })}
+
+          {/* Property dropdown trigger */}
           <div className="relative" onMouseEnter={() => setIsPropertyOpen(true)} onMouseLeave={() => setIsPropertyOpen(false)}>
             <button type="button" onClick={() => setIsPropertyOpen((open) => !open)} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors sm:text-sm ${propertyItems.some((item) => location.pathname === item.path) ? 'bg-stroke/50 text-text-primary' : 'text-muted hover:bg-stroke/50 hover:text-text-primary'}`} aria-expanded={isPropertyOpen} aria-haspopup="true">
               Property <FiChevronDown className={`transition-transform duration-300 ${isPropertyOpen ? 'rotate-180' : ''}`} />
             </button>
-            <AnimatePresence>
-              {isPropertyOpen && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }} className="absolute left-1/2 top-full mt-3 w-72 -translate-x-1/2 border border-stroke bg-bg/95 p-2 shadow-2xl backdrop-blur-xl">
-                  {propertyItems.map((item) => (
-                    <Link key={item.path} to={item.path} className="group block border-b border-stroke px-4 py-4 last:border-0 hover:bg-surface">
-                      <span className="flex items-center justify-between text-sm text-text-primary">{item.name}<span className="transition-transform group-hover:translate-x-1">→</span></span>
-                      <span className="mt-1 block text-xs leading-relaxed text-muted">{item.description}</span>
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
+
+          {/* Services dropdown trigger */}
           <div ref={servicesRef} className="relative" onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}>
             <button type="button" onClick={() => setIsServicesOpen((open) => !open)} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition-colors sm:text-sm ${location.pathname.startsWith('/services') ? 'bg-stroke/50 text-text-primary' : 'text-muted hover:bg-stroke/50 hover:text-text-primary'}`} aria-expanded={isServicesOpen} aria-haspopup="true">
               Services <FiChevronDown className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
             </button>
-            <AnimatePresence>
-              {isServicesOpen && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="fixed left-1/2 top-[76px] w-[min(1100px,calc(100vw-48px))] -translate-x-1/2 border border-stroke bg-bg/95 p-7 shadow-2xl backdrop-blur-xl">
-                  <div className="grid grid-cols-[1fr_1fr_0.9fr] gap-8">
-                    {(['Buy & Sell', 'Advisory'] as const).map((group) => (
-                      <div key={group}>
-                        <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-muted">{group}</p>
-                        {services.filter((service) => service.group === group).map((service) => (
-                          <Link key={service.slug} to={`/services/${service.slug}`} className="group/item block border-t border-stroke px-2 py-3 transition-colors hover:bg-surface">
-                            <span className="flex items-center justify-between text-sm">{service.menuTitle}<span className="-translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100">→</span></span>
-                            <span className="mt-1 block text-xs leading-relaxed text-muted">{service.shortDescription}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    ))}
-                    <div className="bg-surface p-6">
-                      <p className="text-[10px] uppercase tracking-[0.22em] text-muted">Private Property Consultation</p>
-                      <h3 className="mt-5 text-3xl font-display">Not sure where to start?</h3>
-                      <p className="mt-4 text-sm leading-relaxed text-muted">Receive a curated shortlist based on your budget, location and objective.</p>
-                      <Link to="/services/property-consultation" className="mt-7 block bg-text-primary px-5 py-3 text-center text-xs uppercase tracking-[0.14em] text-bg">Book Consultation</Link>
-                      <Link to="/services" className="mt-3 block text-center text-xs uppercase tracking-[0.14em] text-muted">View All Services</Link>
-                    </div>
-                  </div>
-                  <div className="mt-5 grid grid-cols-3 gap-2 border-t border-stroke pt-5">
-                    {services.filter((service) => service.group === 'Support').map((service) => <Link key={service.slug} to={`/services/${service.slug}`} className="text-xs text-muted transition-colors hover:text-text-primary">{service.menuTitle} →</Link>)}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         </div>
 
@@ -192,6 +125,68 @@ const Navbar = () => {
         </button>
       </div>
 
+      {/* ── Dropdowns rendered OUTSIDE the glass-nav pill so backdrop-filter doesn't break fixed positioning ── */}
+
+      {/* Property dropdown */}
+      <AnimatePresence>
+        {isPropertyOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}
+            onMouseEnter={() => setIsPropertyOpen(true)} onMouseLeave={() => setIsPropertyOpen(false)}
+            className="absolute top-full mt-2 w-72 border border-stroke bg-bg p-2 shadow-2xl text-text-primary"
+            style={{ left: '50%', transform: 'translateX(-50%)' }}
+          >
+            {propertyItems.map((item) => (
+              <Link key={item.path} to={item.path} className="group block border-b border-stroke px-4 py-4 last:border-0 hover:bg-surface">
+                <span className="flex items-center justify-between text-sm text-text-primary">{item.name}<span className="transition-transform group-hover:translate-x-1">→</span></span>
+                <span className="mt-1 block text-xs leading-relaxed text-muted">{item.description}</span>
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Services mega-menu — sibling to pill, no backdrop-filter parent */}
+      <AnimatePresence>
+        {isServicesOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}
+            onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}
+            className="absolute top-full mt-2 border border-stroke bg-bg shadow-2xl text-text-primary overflow-hidden"
+            style={{ left: '50%', transform: 'translateX(-50%)', width: 'min(1100px, calc(100vw - 48px))' }}
+          >
+            <div className="p-5 md:p-7">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_0.9fr]">
+                {(['Buy & Sell', 'Advisory'] as const).map((group) => (
+                  <div key={group}>
+                    <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-muted">{group}</p>
+                    {services.filter((service) => service.group === group).map((service) => (
+                      <Link key={service.slug} to={`/services/${service.slug}`} className="group/item block border-t border-stroke px-2 py-3 transition-colors hover:bg-surface">
+                        <span className="flex items-center justify-between text-sm">{service.menuTitle}<span className="-translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100">→</span></span>
+                        <span className="mt-1 block text-xs leading-relaxed text-muted">{service.shortDescription}</span>
+                      </Link>
+                    ))}
+                  </div>
+                ))}
+                <div className="bg-surface p-5 sm:col-span-2 lg:col-span-1">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted">Private Property Consultation</p>
+                  <h3 className="mt-4 text-2xl font-display lg:text-3xl">Not sure where to start?</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">Receive a curated shortlist based on your budget, location and objective.</p>
+                  <Link to="/services/property-consultation" className="mt-5 block bg-text-primary px-5 py-3 text-center text-xs uppercase tracking-[0.14em] text-bg">Book Consultation</Link>
+                  <Link to="/services" className="mt-3 block text-center text-xs uppercase tracking-[0.14em] text-muted">View All Services</Link>
+                </div>
+              </div>
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-stroke pt-5">
+                {services.filter((service) => service.group === 'Support').map((service) => (
+                  <Link key={service.slug} to={`/services/${service.slug}`} className="text-xs text-muted transition-colors hover:text-text-primary">{service.menuTitle} →</Link>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div

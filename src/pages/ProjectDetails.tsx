@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
-import { projects } from '../data/projects';
+import { useProjects } from '../data/projectStore';
 
 type GalleryImage = { src: string; label: string };
 
@@ -21,9 +21,10 @@ const projectGalleries: Record<string, GalleryImage[]> = {
 
 export default function ProjectDetails() {
   const { slug } = useParams();
-  const project = projects.find((item) => item.slug === slug);
+  const { projects: catalog, loading } = useProjects();
+  const project = catalog.find((item) => item.slug === slug);
   const [activeImage, setActiveImage] = useState<number | null>(null);
-  const gallery = project ? projectGalleries[project.slug] || [{ src: project.image, label: project.title }] : [];
+  const gallery = project ? project.gallery?.length ? project.gallery : projectGalleries[project.slug] || [{ src: project.image, label: project.title }] : [];
 
   useEffect(() => {
     if (!project) return;
@@ -45,6 +46,7 @@ export default function ProjectDetails() {
     return () => { document.removeEventListener('keydown', handleKey); document.body.style.overflow = ''; };
   }, [activeImage, gallery.length]);
 
+  if (loading) return <main className="min-h-screen px-6 pb-24 pt-40 text-center text-muted">Loading project details...</main>;
   if (!project) return <Navigate to="/projects" replace />;
 
   return (
@@ -77,6 +79,7 @@ export default function ProjectDetails() {
           <div className="grid auto-rows-[180px] gap-3 sm:grid-cols-2 sm:auto-rows-[240px] lg:grid-cols-3">
             {gallery.map((image, index) => <button key={image.src} type="button" onClick={() => setActiveImage(index)} className={`group relative overflow-hidden bg-surface text-left ${index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}`} aria-label={`Open ${image.label}`}><img src={image.src} alt={`${project.title} - ${image.label}`} loading={index === 0 ? 'eager' : 'lazy'} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" /><span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-4 pb-4 pt-10 text-xs capitalize text-white opacity-0 transition-opacity group-hover:opacity-100">{image.label}</span></button>)}
           </div>
+          {project.video && <video className="mt-5 max-h-[560px] w-full bg-bg object-contain" controls preload="metadata" src={project.video} />}
         </section>
 
         <section className="mt-20 grid gap-12 border-t border-stroke pt-12 lg:grid-cols-2"><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">The A&amp;G View</p><h2 className="mb-5 text-4xl font-display">A clearer way to evaluate it.</h2><h3 className="mb-3 text-xl">What We Like</h3><ul className="mb-8 space-y-3 text-muted">{project.highlights.slice(0, 4).map((item) => <li key={item}>- {item}</li>)}</ul><h3 className="mb-3 text-xl">Things to Consider</h3><ul className="space-y-3 text-muted">{project.considerations.map((item) => <li key={item}>- {item}</li>)}</ul></div><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">Best Suited For</p><p className="text-2xl font-display leading-tight">{project.bestSuitedFor}</p><p className="mt-10 mb-4 text-xs uppercase tracking-[0.3em] text-muted">Compare With</p><div className="flex flex-wrap gap-3">{project.similar.map((similar) => <span key={similar} className="rounded-full border border-stroke px-4 py-2 text-sm text-muted">{similar}</span>)}</div></div></section>

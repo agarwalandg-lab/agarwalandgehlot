@@ -13,12 +13,16 @@ import Plots from './pages/Plots';
 import Investment from './pages/Investment';
 import Contact from './pages/Contact';
 import PropertyFinder from './pages/PropertyFinder';
+import Admin from './pages/Admin';
+import EmployeePortal from './pages/EmployeePortal';
 
 export default function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route path="/7742143317" element={<Admin />} />
+        <Route path="/9654322224" element={<EmployeePortal />} />
+        <Route path="*" element={<Layout><Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
@@ -32,8 +36,8 @@ export default function App() {
           <Route path="/investment" element={<Investment />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/property-finder" element={<PropertyFinder />} />
-        </Routes>
-      </Layout>
+        </Routes></Layout>} />
+      </Routes>
     </Router>
   );
 }

@@ -17,7 +17,9 @@ export default {
         "text-primary": "hsl(var(--text))",
         muted: "hsl(var(--muted))",
         stroke: "hsl(var(--stroke))",
-        accent: "hsl(var(--accent))"
+        accent: "hsl(var(--accent))",
+    primary: "#061a2f",
+    secondary: "#eeeae2"
       },
     },
   },

@@ -161,7 +161,9 @@ export default function Chatbot() {
               <div className="absolute -right-10 -top-14 h-36 w-36 rounded-full bg-[#76aee5]/30 blur-2xl" />
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 font-brand text-sm">A&amp;G</div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 overflow-hidden">
+                    <img src="/logos/ag-logo.png" alt="A&G Logo" className="w-full h-full object-contain p-1" />
+                  </div>
                   <div>
                     <div className="flex items-center gap-2"><h2 className="font-medium">Aira</h2><span className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] uppercase tracking-wider">AI</span></div>
                     <p className="mt-0.5 flex items-center gap-1.5 text-xs text-white/70"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />Online · replies instantly</p>

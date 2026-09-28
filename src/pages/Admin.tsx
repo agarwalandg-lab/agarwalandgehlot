@@ -76,6 +76,7 @@ export default function Admin() {
   const [projects, setProjects] = useState<ManagedProject[]>([]);
   const [current, setCurrent] = useState<ManagedProject | null>(null);
   const [about, setAbout] = useState<AboutContent>(defaultAbout);
+  const [home, setHome] = useState<HomeContent>(defaultHome);
   const [tab, setTab] = useState<
     "projects" | "website" | "about" | "employees"
   >("projects");

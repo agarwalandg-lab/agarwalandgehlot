@@ -85,6 +85,9 @@ export default function Admin() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // Mark home as intentionally unused for now - it's used in the website tab
+  void home;
+
   useEffect(() => {
     if (!supabase) return;
     supabase.auth.getSession().then(({ data }) => setSession(data.session));

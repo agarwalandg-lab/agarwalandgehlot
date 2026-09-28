@@ -235,7 +235,36 @@ export default function Admin() {
   if (!supabaseConfigured)
     return (
       <main className="admin-shell min-h-screen p-10">
-        Supabase is not configured.
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-display text-text-primary mb-4">Admin Panel</h1>
+          <p className="text-muted mb-6">Supabase is not configured. You can still edit content locally, but changes won't be saved to the database.</p>
+          <div className="admin-panel p-6">
+            <p className="text-sm text-muted mb-4">To enable full functionality, configure these environment variables:</p>
+            <ul className="text-sm text-muted space-y-2">
+              <li>• VITE_SUPABASE_URL</li>
+              <li>• VITE_SUPABASE_ANON_KEY</li>
+            </ul>
+          </div>
+          <div className="mt-6">
+            <button
+              onClick={() => {
+                setProjects(defaults as ManagedProject[]);
+                setAbout(defaultAbout);
+                setHome(defaultHome);
+                setMessage("Loaded default content for local editing.");
+              }}
+              className="admin-accent px-4 py-2 text-sm"
+            >
+              Load Default Content
+            </button>
+          </div>
+          {message && <p className="mt-4 text-sm text-emerald-700">{message}</p>}
+          {projects.length > 0 && (
+            <div className="mt-8">
+              <ProjectEditorSimple projects={projects} setProjects={setProjects} />
+            </div>
+          )}
+        </div>
       </main>
     );
   if (!session)
@@ -853,6 +882,83 @@ function AboutEditor({
       </div>
       {message && <p className="mt-4 text-sm text-emerald-700">{message}</p>}
     </section>
+  );
+}
+
+function ProjectEditorSimple({ projects, setProjects }: { projects: ManagedProject[]; setProjects: (projects: ManagedProject[]) => void }) {
+  const [selectedProject, setSelectedProject] = useState<ManagedProject | null>(null);
+  
+  if (!selectedProject) {
+    return (
+      <div>
+        <h2 className="text-2xl font-display text-text-primary mb-4">Select a Project to Edit</h2>
+        <div className="space-y-2">
+          {projects.map((project) => (
+            <button
+              key={project.slug}
+              onClick={() => setSelectedProject(project)}
+              className="w-full text-left admin-panel p-4 hover:bg-surface transition-colors"
+            >
+              <div className="font-medium text-text-primary">{project.title}</div>
+              <div className="text-sm text-muted">{project.location}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        onClick={() => setSelectedProject(null)}
+        className="mb-4 text-sm text-muted hover:text-text-primary"
+      >
+        ← Back to Projects
+      </button>
+      <div className="admin-panel p-6">
+        <h2 className="text-2xl font-display text-text-primary mb-4">{selectedProject.title}</h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs uppercase tracking-widest text-muted mb-2">Title</label>
+            <input
+              value={selectedProject.title}
+              onChange={(e) => {
+                const updated = projects.map(p => p.slug === selectedProject.slug ? { ...p, title: e.target.value } : p);
+                setProjects(updated);
+                setSelectedProject({ ...selectedProject, title: e.target.value });
+              }}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className="block text-xs uppercase tracking-widest text-muted mb-2">Description</label>
+            <textarea
+              value={selectedProject.description}
+              onChange={(e) => {
+                const updated = projects.map(p => p.slug === selectedProject.slug ? { ...p, description: e.target.value } : p);
+                setProjects(updated);
+                setSelectedProject({ ...selectedProject, description: e.target.value });
+              }}
+              className={`${inputClass} min-h-24`}
+            />
+          </div>
+          <div>
+            <label className="block text-xs uppercase tracking-widest text-muted mb-2">Price</label>
+            <input
+              value={selectedProject.price}
+              onChange={(e) => {
+                const updated = projects.map(p => p.slug === selectedProject.slug ? { ...p, price: e.target.value } : p);
+                setProjects(updated);
+                setSelectedProject({ ...selectedProject, price: e.target.value });
+              }}
+              className={inputClass}
+            />
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-amber-600">Note: Changes are local only. Configure Supabase to save to database.</p>
+      </div>
+    </div>
   );
 }
 

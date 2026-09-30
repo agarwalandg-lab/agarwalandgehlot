@@ -273,14 +273,14 @@ const Footer = () => {
         </Link>
 
         <div className="w-full max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-stroke/50 pt-8">
-          <div className="flex gap-6 text-sm text-muted">
-            <Link to="/" className="hover:text-text-primary transition-colors">Home</Link>
-            <Link to="/about" className="hover:text-text-primary transition-colors">About Us</Link>
-            <Link to="/projects" className="hover:text-text-primary transition-colors">Projects</Link>
-            <Link to="/contact" className="hover:text-text-primary transition-colors">Contact</Link>
-            <Link to="/privacy-policy" className="hover:text-text-primary transition-colors">Privacy Policy</Link>
+          <div className="flex gap-6 text-sm text-text-primary">
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+            <Link to="/projects" className="hover:text-white transition-colors">Projects</Link>
+            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+            <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted">
+          <div className="flex items-center gap-3 text-sm text-text-primary">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>

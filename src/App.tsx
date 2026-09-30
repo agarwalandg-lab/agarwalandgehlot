@@ -13,6 +13,7 @@ import Plots from './pages/Plots';
 import Investment from './pages/Investment';
 import Contact from './pages/Contact';
 import PropertyFinder from './pages/PropertyFinder';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import Admin from './pages/Admin';
 import EmployeePortal from './pages/EmployeePortal';
 
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/investment" element={<Investment />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/property-finder" element={<PropertyFinder />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes></Layout>} />
       </Routes>
     </Router>

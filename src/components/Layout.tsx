@@ -278,6 +278,7 @@ const Footer = () => {
             <Link to="/about" className="hover:text-text-primary transition-colors">About Us</Link>
             <Link to="/projects" className="hover:text-text-primary transition-colors">Projects</Link>
             <Link to="/contact" className="hover:text-text-primary transition-colors">Contact</Link>
+            <Link to="/privacy-policy" className="hover:text-text-primary transition-colors">Privacy Policy</Link>
           </div>
           <div className="flex items-center gap-3 text-sm text-muted">
             <span className="relative flex h-2.5 w-2.5">

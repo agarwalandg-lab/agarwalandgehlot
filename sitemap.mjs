@@ -6,7 +6,7 @@ export const staticSitePaths = [
   '/projects/cleo-county-sector-121-noida', '/projects/county-107-sector-107-noida', '/projects/orange-county-indirapuram',
   '/projects/ivy-county-sector-75-noida', '/projects/coco-county-greater-noida-west', '/projects/the-center-court-sector-88a-gurugram',
   '/projects/cherry-county-greater-noida-west', '/projects/county-courtyard-netaji-subhash-place', '/projects/olive-county-vasundhara-ghaziabad',
-  '/property-in-noida', '/3bhkflat', '/property-in-greater-noida', '/property-investment-noida', '/luxury-properties-noida', '/property-near-noida-airport',
+  '/property-in-noida', '/3bhk-flat', '/property-in-greater-noida', '/property-investment-noida', '/luxury-properties-noida', '/property-near-noida-airport',
   '/services/buy-property', '/services/sell-property', '/services/commercial-real-estate', '/services/property-investment',
   '/services/nri-services', '/services/property-consultation', '/services/site-visits', '/services/home-loan-assistance',
   '/services/legal-documentation', '/privacy-policy', '/blog', '/community-blogs',

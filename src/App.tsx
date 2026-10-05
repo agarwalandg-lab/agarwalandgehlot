@@ -40,6 +40,7 @@ export default function App() {
             <Route path="/admin/blogs" element={<BlogAdmin />} />
             <Route path="/admin/blog" element={<BlogAdmin />} />
             <Route path="/thankyou" element={<ThankYou />} />
+            <Route path="/3bhk-flat" element={<IvoryCountyMicrosite />} />
             <Route path="/projects/ivory-county" element={<IvoryCountyMicrosite />} />
             <Route path="/projects/ivory-county-sector-115-noida" element={<IvoryCountyMicrosite />} />
             <Route path="/ivory-county" element={<IvoryCountyMicrosite />} />
@@ -64,7 +65,6 @@ export default function App() {
               <Route path="/investment" element={<Investment />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/property-in-noida" element={<SeoLandingPage path="/property-in-noida" />} />
-              <Route path="/3bhkflat" element={<SeoLandingPage path="/3bhkflat" />} />
               <Route path="/property-in-greater-noida" element={<SeoLandingPage path="/property-in-greater-noida" />} />
               <Route path="/property-investment-noida" element={<SeoLandingPage path="/property-investment-noida" />} />
               <Route path="/luxury-properties-noida" element={<SeoLandingPage path="/luxury-properties-noida" />} />

@@ -9,7 +9,7 @@ export default function Footer() {
       title: 'PRODUCTS',
       links: [
         { label: 'Residential Homes', path: '/residential' },
-        { label: '3bhk flat in noida', path: '/3bhkflat' },
+        { label: '3bhk flat in noida', path: '/3bhk-flat' },
         { label: 'Commercial Spaces', path: '/commercial' },
         { label: 'Plots & Land', path: '/plots' },
         { label: 'Investment Opportunities', path: '/investment' },
@@ -31,7 +31,7 @@ export default function Footer() {
       title: 'INDUSTRIES / LOCATIONS',
       links: [
         { label: 'Property in Noida', path: '/property-in-noida' },
-        { label: '3bhk flat in noida', path: '/3bhkflat' },
+        { label: '3bhk flat in noida', path: '/3bhk-flat' },
         { label: 'Property in Greater Noida', path: '/property-in-greater-noida' },
         { label: 'Sector 150 Noida', path: '/projects/clove-county-sector-151-noida' },
         { label: 'Sector 115 Noida', path: '/projects/ivory-county-sector-115-noida' },

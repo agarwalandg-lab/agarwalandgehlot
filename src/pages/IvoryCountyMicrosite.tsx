@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import IvoryHeader from '../components/ivory-county/IvoryHeader';
 import IvoryHero from '../components/ivory-county/IvoryHero';
@@ -25,6 +26,9 @@ import IvoryLeadModal, { ModalType } from '../components/ivory-county/IvoryLeadM
 import { IVORY_COUNTY_DATA, ConfigurationItem } from '../data/ivoryCountyData';
 
 export default function IvoryCountyMicrosite() {
+  const location = useLocation();
+  const is3BhkLanding = location.pathname === '/3bhk-flat';
+
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     type: ModalType;
@@ -60,7 +64,11 @@ export default function IvoryCountyMicrosite() {
 
   // Update Page Title and Meta description
   useEffect(() => {
-    document.title = 'Ivory County Sector 115 Noida | 3, 4 & 5 BHK Price, Floor Plans, RERA | A&G Realtors';
+    if (is3BhkLanding) {
+      document.title = '3 BHK Flat in Noida | Ivory County Sector 115 Luxury Residences | A&G Realtors';
+    } else {
+      document.title = 'Ivory County Sector 115 Noida | 3, 4 & 5 BHK Price, Floor Plans, RERA | A&G Realtors';
+    }
 
     // Inject SEO Meta tags
     let metaDesc = document.querySelector('meta[name="description"]');
@@ -71,9 +79,11 @@ export default function IvoryCountyMicrosite() {
     }
     metaDesc.setAttribute(
       'content',
-      'Discover Ivory County in Sector 115 Noida by County Group. Ultra-luxury 3, 4 & 5 BHK residences across 28 acres with 11 acres central greens, dual clubhouses, 40:60 payment plan & verified RERA details.'
+      is3BhkLanding
+        ? 'Explore luxury 3 BHK flats at Ivory County Sector 115 Noida. 2,034 - 2,304 sq ft with large balconies, 11-acre central greens, dual clubhouses, 40:60 payment plan & verified UP RERA.'
+        : 'Discover Ivory County in Sector 115 Noida by County Group. Ultra-luxury 3, 4 & 5 BHK residences across 28 acres with 11 acres central greens, dual clubhouses, 40:60 payment plan & verified RERA details.'
     );
-  }, []);
+  }, [is3BhkLanding]);
 
   const openModal = (type: ModalType = 'general', unitTitle?: string) => {
     setModalState({
@@ -101,10 +111,11 @@ export default function IvoryCountyMicrosite() {
     '@graph': [
       {
         '@type': 'RealEstateListing',
-        name: 'Ivory County Sector 115 Noida',
-        description:
-          'Ultra-luxury 3, 4 & 5 BHK residential project in Sector 115, Noida by County Group, featuring 28 acres master estate, 11 acres botanical greens, and dual clubhouses.',
-        url: 'https://agarwalandgehlotrealtors.com/projects/ivory-county',
+        name: is3BhkLanding ? '3 BHK Flats in Noida - Ivory County' : 'Ivory County Sector 115 Noida',
+        description: is3BhkLanding
+          ? 'Luxury 3 BHK flats at Ivory County Sector 115, Noida. 2,034 - 2,304 sq ft with large balconies, 11-acre botanical greens, dual clubhouses, and verified UP RERA.'
+          : 'Ultra-luxury 3, 4 & 5 BHK residential project in Sector 115, Noida by County Group, featuring 28 acres master estate, 11 acres botanical greens, and dual clubhouses.',
+        url: is3BhkLanding ? 'https://agarwalandgehlotrealtors.com/3bhk-flat' : 'https://agarwalandgehlotrealtors.com/projects/ivory-county',
         image: 'https://agarwalandgehlotrealtors.com/cover/ivory-county.webp',
         offers: {
           '@type': 'AggregateOffer',

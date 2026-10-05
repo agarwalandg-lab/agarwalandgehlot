@@ -66,7 +66,7 @@ export default function IvoryFooter() {
               <li><Link to="/projects/jade-county" className="hover:text-white">Jade County (Wave City)</Link></li>
               <li><Link to="/projects/cleo-county-sector-121-noida" className="hover:text-white">Cleo County (Sector 121)</Link></li>
               <li><Link to="/projects/ivy-county-sector-75-noida" className="hover:text-white">Ivy County (Sector 75)</Link></li>
-              <li><Link to="/3bhkflat" className="hover:text-white text-[#B59A6A]">3 BHK Flats in Noida</Link></li>
+              <li><Link to="/3bhk-flat" className="hover:text-white text-[#B59A6A]">3 BHK Flats in Noida</Link></li>
               <li><Link to="/luxury-properties-noida" className="hover:text-white">Luxury Properties Noida</Link></li>
             </ul>
           </div>

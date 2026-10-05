@@ -13,8 +13,8 @@ export type SeoLandingPageData = {
 };
 
 export const seoLandingPages: Record<string, SeoLandingPageData> = {
-  '/3bhkflat': {
-    path: '/3bhkflat',
+  '/3bhk-flat': {
+    path: '/3bhk-flat',
     title: '3 BHK Flat in Noida | Luxury 3 BHK Apartments & Prices | A&G Realtors',
     description: 'Explore verified 3 BHK flats in Noida across Sector 150, Sector 115, Sector 121, and Sector 107. Compare prices, floor plans, carpet area, and RERA approvals with A&G Realtors.',
     primaryKeyword: '3 BHK Flat in Noida',

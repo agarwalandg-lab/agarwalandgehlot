@@ -14,7 +14,7 @@ export default function Services() {
     <section className="mx-auto max-w-[1200px] px-6 md:px-10">
       <div className="border-b border-stroke pb-20 text-center">
         <p className="mb-5 text-xs uppercase tracking-[0.3em] text-muted">Real Estate Services</p>
-        <h1 className="mx-auto max-w-4xl text-5xl font-display leading-tight md:text-7xl">Advisory that goes beyond finding a property.</h1>
+        <h1 className="mx-auto max-w-4xl text-5xl font-display leading-tight md:text-7xl">Real Estate Services in Noida and Delhi NCR</h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted">From property discovery and investment advisory to documentation and site visits, A&amp;G helps you make informed real-estate decisions at every stage.</p>
         <Link to="/services/property-consultation" className="mt-9 inline-block bg-text-primary px-7 py-4 text-xs font-medium uppercase tracking-[0.15em] text-bg">Talk to an Advisor</Link>
       </div>

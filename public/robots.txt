@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /7742143317
+Disallow: /9654322224
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://agarwalandgehlotrealtors.com/sitemap.xml

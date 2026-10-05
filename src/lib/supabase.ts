@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || 'https://nmhfjzpabcfbqqrzvtbv.supabase.co';
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || 'sb_publishable_4sIY0chqW3Y7YSM-JP2JnQ_VjI7UJzp';
 
-// Fallback to example values for development/demo purposes
-const fallbackUrl = 'https://miihavdmvvfthivkdimz.supabase.co';
-const fallbackKey = 'sb_publishable_iftKO98ItmyarrCgNyR7xA_9LKDVEsC';
-
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : createClient(fallbackUrl, fallbackKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
 
 export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);

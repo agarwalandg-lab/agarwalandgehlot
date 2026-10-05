@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 import { useProjects } from '../data/projectStore';
+import { canonicalProjectAliases, projectAliasSeo, projectSlugAliases } from '../data/seoLandingPages';
 
 type GalleryImage = { src: string; label: string };
 
@@ -22,17 +23,13 @@ const projectGalleries: Record<string, GalleryImage[]> = {
 export default function ProjectDetails() {
   const { slug } = useParams();
   const { projects: catalog, loading } = useProjects();
-  const project = catalog.find((item) => item.slug === slug);
+  const routeSlug = slug || '';
+  const projectSlug = projectSlugAliases[routeSlug] || routeSlug;
+  const project = catalog.find((item) => item.slug === projectSlug);
+  const aliasSeo = projectAliasSeo[routeSlug] || projectAliasSeo[canonicalProjectAliases[routeSlug]];
   const [activeImage, setActiveImage] = useState<number | null>(null);
   const gallery = project ? project.gallery?.length ? project.gallery : projectGalleries[project.slug] || [{ src: project.image, label: project.title }] : [];
-
-  useEffect(() => {
-    if (!project) return;
-    document.title = project.seo.title;
-    const description = document.querySelector('meta[name="description"]') ?? document.head.appendChild(document.createElement('meta'));
-    description.setAttribute('name', 'description');
-    description.setAttribute('content', project.seo.description);
-  }, [project]);
+  const relatedProjects = project ? project.similar.map((name) => catalog.find((item) => item.title === name)).filter((item) => item && item.slug !== project.slug) : [];
 
   useEffect(() => {
     if (activeImage === null) return;
@@ -48,19 +45,44 @@ export default function ProjectDetails() {
 
   if (loading) return <main className="min-h-screen px-6 pb-24 pt-40 text-center text-muted">Loading project details...</main>;
   if (!project) return <Navigate to="/projects" replace />;
+  if (projectSlug === 'ivory-county-sector-115-noida' && routeSlug !== 'ivory-county') {
+    return <Navigate to="/projects/ivory-county" replace />;
+  }
+
+  const projectWhatsappMsg = encodeURIComponent(`Hi A&G Realtors, I am interested in ${project.title} (${project.location}). Please share current pricing, floor plans, and available inventory.`);
+  const projectWhatsappUrl = `https://wa.me/919654322224?text=${projectWhatsappMsg}`;
 
   return (
     <main className="w-full overflow-hidden pt-32 pb-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
-        <Link to="/projects" className="mb-10 inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-text-primary"><span aria-hidden="true">&larr;</span> Back to Projects</Link>
+        
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-xs text-muted">
+          <Link to="/" className="hover:text-text-primary transition-colors">Home</Link>
+          <span>/</span>
+          <Link to="/projects" className="hover:text-text-primary transition-colors">Projects</Link>
+          <span>/</span>
+          <span className="text-text-primary font-medium">{project.title}</span>
+        </nav>
+
         <section className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-          <div className="overflow-hidden rounded-3xl border border-stroke bg-surface"><img src={project.image} alt={project.title} className="aspect-[4/3] h-full w-full object-cover" /></div>
+          <div className="overflow-hidden rounded-3xl border border-stroke bg-surface"><img src={project.image} alt={`${project.title} residential project in ${project.location}`} width="1200" height="900" fetchPriority="high" className="aspect-[4/3] h-full w-full object-cover" /></div>
           <div>
             <p className="mb-5 text-xs uppercase tracking-[0.3em] text-muted">{project.type}</p>
-            <h1 className="mb-5 text-5xl font-display leading-tight md:text-7xl">{project.title}</h1>
+            <h1 className="mb-5 text-5xl font-display leading-tight md:text-7xl">{aliasSeo?.primaryKeyword || project.seo?.primaryKeyword || `${project.title} in ${project.location}`}</h1>
             <p className="mb-6 text-lg leading-relaxed text-muted">{project.description}</p>
             <div className="grid gap-4 border-y border-stroke py-5 text-sm sm:grid-cols-2">{[['Location', project.location], ['Configuration', project.configurations], ['Status', project.status], ['Price', project.price]].map(([label, value]) => <div key={label}><p className="text-xs uppercase tracking-[0.2em] text-muted">{label}</p><p className="mt-1 text-text-primary">{value}</p></div>)}</div>
-            <div className="mt-8 flex flex-wrap gap-3"><Link to="/contact" className="rounded-full bg-text-primary px-6 py-3 text-sm text-bg transition-transform hover:scale-105">View Price &amp; Inventory</Link><Link to="/contact" className="rounded-full border border-stroke px-6 py-3 text-sm text-text-primary">Book a Site Visit</Link><Link to="/contact" className="rounded-full border border-stroke px-6 py-3 text-sm text-text-primary">Download Brochure</Link></div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={projectWhatsappUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-emerald-600 hover:bg-emerald-700 px-6 py-3 text-sm text-white font-medium transition-transform hover:scale-105 inline-flex items-center gap-2">
+                WhatsApp Inquiry ↗
+              </a>
+              <Link to={`/contact?project=${encodeURIComponent(project.title)}`} className="rounded-full bg-text-primary px-6 py-3 text-sm text-bg transition-transform hover:scale-105">
+                View Price &amp; Inventory
+              </Link>
+              <Link to={`/contact?project=${encodeURIComponent(project.title)}`} className="rounded-full border border-stroke px-6 py-3 text-sm text-text-primary transition-colors hover:bg-stroke/50">
+                Book a Site Visit
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -82,7 +104,7 @@ export default function ProjectDetails() {
           {project.video && <video className="mt-5 max-h-[560px] w-full bg-bg object-contain" controls preload="metadata" src={project.video} />}
         </section>
 
-        <section className="mt-20 grid gap-12 border-t border-stroke pt-12 lg:grid-cols-2"><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">The A&amp;G View</p><h2 className="mb-5 text-4xl font-display">A clearer way to evaluate it.</h2><h3 className="mb-3 text-xl">What We Like</h3><ul className="mb-8 space-y-3 text-muted">{project.highlights.slice(0, 4).map((item) => <li key={item}>- {item}</li>)}</ul><h3 className="mb-3 text-xl">Things to Consider</h3><ul className="space-y-3 text-muted">{project.considerations.map((item) => <li key={item}>- {item}</li>)}</ul></div><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">Best Suited For</p><p className="text-2xl font-display leading-tight">{project.bestSuitedFor}</p><p className="mt-10 mb-4 text-xs uppercase tracking-[0.3em] text-muted">Compare With</p><div className="flex flex-wrap gap-3">{project.similar.map((similar) => <span key={similar} className="rounded-full border border-stroke px-4 py-2 text-sm text-muted">{similar}</span>)}</div></div></section>
+        <section className="mt-20 grid gap-12 border-t border-stroke pt-12 lg:grid-cols-2"><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">The A&amp;G View</p><h2 className="mb-5 text-4xl font-display">A clearer way to evaluate it.</h2><h3 className="mb-3 text-xl">What We Like</h3><ul className="mb-8 space-y-3 text-muted">{project.highlights.slice(0, 4).map((item) => <li key={item}>- {item}</li>)}</ul><h3 className="mb-3 text-xl">Things to Consider</h3><ul className="space-y-3 text-muted">{project.considerations.map((item) => <li key={item}>- {item}</li>)}</ul></div><div><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">Best Suited For</p><p className="text-2xl font-display leading-tight">{project.bestSuitedFor}</p><p className="mt-10 mb-4 text-xs uppercase tracking-[0.3em] text-muted">Compare With</p><div className="flex flex-wrap gap-3">{relatedProjects.map((similar) => similar && <Link key={similar.slug} to={`/projects/${canonicalProjectAliases[similar.slug] || similar.slug}`} className="border-b border-stroke pb-1 text-sm text-muted transition-colors hover:border-text-primary hover:text-text-primary">{similar.title}</Link>)}</div></div></section>
 
         <section className="mt-20"><p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">RERA &amp; Legal Information</p><div className="rounded-2xl border border-stroke p-6 text-sm leading-relaxed text-muted"><p><strong className="text-text-primary">Project RERA:</strong> {project.rera}</p><p className="mt-2"><strong className="text-text-primary">Promoter:</strong> {project.promoter}</p><p className="mt-5">Buyers should independently review the latest project information, approvals and documentation on the relevant RERA portal before making a purchase decision.</p></div></section>
 

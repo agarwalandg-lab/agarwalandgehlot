@@ -2,8 +2,9 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import { buildSitemap } from './sitemap.mjs';
 
-const port = Number(process.env.PORT || 8787);
+const port = Number(process.env.BLOG_API_PORT || process.env.PORT || 8787);
 const apiKey = process.env.OPENAI_API_KEY;
 const model = process.env.OPENAI_MODEL || 'gpt-5-mini';
 const distRoot = join(process.cwd(), 'dist');
@@ -81,6 +82,27 @@ async function chat(request, response) {
   }
 }
 
+async function sitemap(response) {
+  let blogs = [];
+  let categories = [];
+  if (supabaseAuth) {
+    const now = new Date().toISOString();
+    const [blogResult, categoryResult] = await Promise.all([
+      supabaseAuth.from('blogs').select('slug,category_id,status,published_at,scheduled_at,updated_at,seo:blog_seo(robots,canonical_url),author:authors(slug)')
+        .or(`and(status.eq.published,published_at.lte.${now}),and(status.eq.scheduled,scheduled_at.lte.${now})`),
+      supabaseAuth.from('blog_categories').select('id,slug'),
+    ]);
+    if (!blogResult.error && !categoryResult.error) {
+      blogs = blogResult.data || [];
+      categories = categoryResult.data || [];
+    } else {
+      console.error('Could not load blog sitemap data.', blogResult.error || categoryResult.error);
+    }
+  }
+  response.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300, stale-while-revalidate=600' });
+  response.end(buildSitemap(blogs, categories));
+}
+
 async function requirePortalAdmin(request, response) {
   const token = request.headers.authorization?.replace(/^Bearer\s+/i, '');
   if (!token || !supabaseAuth) { json(response, 503, { error: 'Employee administration needs the Supabase URL and anon key.' }); return null; }
@@ -90,6 +112,22 @@ async function requirePortalAdmin(request, response) {
   const { data: employee } = await supabaseAdmin.from('employee_profiles').select('id').eq('id', data.user.id).maybeSingle();
   if (employee) { json(response, 403, { error: 'Employee accounts cannot access administration.' }); return null; }
   return data.user;
+}
+
+async function bootstrapBlogAdmin(request, response) {
+  const expectedEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (!expectedEmail || !supabaseAuth || !supabaseAdmin) return json(response, 503, { error: 'Configure ADMIN_EMAIL and server-side Supabase credentials before admin bootstrap.' });
+  const token = request.headers.authorization?.replace(/^Bearer\s+/i, '');
+  if (!token) return json(response, 401, { error: 'Sign in first.' });
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+  if (error || !data.user) return json(response, 401, { error: 'Your session is invalid. Sign in again.' });
+  if (data.user.email?.trim().toLowerCase() !== expectedEmail) return json(response, 403, { error: 'This account is not authorized for the blog dashboard.' });
+  if (data.user.app_metadata?.role === 'admin') return json(response, 200, { authorized: true });
+  const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(data.user.id, {
+    app_metadata: { ...data.user.app_metadata, role: 'admin' },
+  });
+  if (updateError) return json(response, 500, { error: 'Could not grant the configured administrator role.' });
+  return json(response, 200, { authorized: true });
 }
 
 async function employeeApi(request, response) {
@@ -194,7 +232,9 @@ const mimeTypes = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'tex
 
 createServer(async (request, response) => {
   const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
+  if (url.pathname === '/sitemap.xml' && request.method === 'GET') return sitemap(response);
   if (url.pathname === '/api/chat' && request.method === 'POST') return chat(request, response);
+  if (url.pathname === '/api/blog-admin-bootstrap' && request.method === 'POST') return bootstrapBlogAdmin(request, response);
   if (url.pathname === '/api/employees' && ['GET', 'POST'].includes(request.method || '')) return employeeApi(request, response);
   if (url.pathname === '/api/employee-login' && request.method === 'POST') return employeeLogin(request, response);
   if (url.pathname === '/api/health') return json(response, 200, { ok: true, aiConfigured: Boolean(apiKey) });

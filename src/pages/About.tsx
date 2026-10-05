@@ -21,8 +21,8 @@ export default function About() {
       <div className="mx-auto max-w-[1000px] px-6 md:px-10">
         <FadeIn>
           <div className="relative mb-12 overflow-hidden border border-stroke bg-surface">
-            {about.heroVideo ? <video src={about.heroVideo} autoPlay muted loop playsInline className="h-[min(55vh,520px)] w-full object-cover" /> : about.heroImage ? <img src={about.heroImage} alt="A&G" className="h-[min(55vh,520px)] w-full object-cover" /> : null}
-            <h1 className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pb-8 pt-24 text-center text-5xl font-display text-white md:text-7xl">{about.heroTitle}</h1>
+            {about.heroVideo ? <video src={about.heroVideo} autoPlay muted loop playsInline className="h-[min(55vh,520px)] w-full object-cover" /> : about.heroImage ? <img src={about.heroImage} alt="A&G Realtors property consulting in Noida and Delhi NCR" className="h-[min(55vh,520px)] w-full object-cover" /> : null}
+            <h1 className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pb-8 pt-24 text-center text-5xl font-display text-white md:text-7xl">A&amp;G Realtors: Real Estate Consultants in Noida</h1>
           </div>
         </FadeIn>
 

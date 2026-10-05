@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
     
     const canonical = document.querySelector('link[rel="canonical"]') ?? document.head.appendChild(document.createElement('link'));
     canonical.setAttribute('rel', 'canonical');
-    canonical.setAttribute('href', 'https://agarwalandgehlot.com/privacy-policy');
+    canonical.setAttribute('href', 'https://agarwalandgehlotrealtors.com/privacy-policy');
   }, []);
 
   return (
@@ -279,7 +279,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <div className="mt-6 p-6 bg-surface border border-stroke rounded-2xl">
                   <p className="text-text-primary font-medium mb-2">A&G Realtors</p>
-                  <p className="text-muted">Website: agarwalandgehlot.com</p>
+                  <p className="text-muted">Website: agarwalandgehlotrealtors.com</p>
                   <p className="text-muted">Phone: +91 96543 22224</p>
                   <p className="text-muted mt-4 text-sm">Privacy / Data Protection Queries:</p>
                   <p className="text-muted text-sm">Please contact us through our website's Contact Us section.</p>

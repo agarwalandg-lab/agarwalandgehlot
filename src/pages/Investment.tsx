@@ -14,24 +14,24 @@ const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode, delay?: nu
 export default function Investment() {
   const categories = [
     {
-      title: "Why Invest in Real Estate",
-      desc: "Real estate remains the most tangible, secure, and rewarding asset class. It provides a unique combination of steady passive income and long-term capital appreciation, acting as a powerful hedge against inflation and a cornerstone for generational wealth."
+      title: "Set an Investment Objective",
+      desc: "Decide whether a property is intended for personal use, rental income, resale or portfolio diversification. Each objective has a different time horizon, cash-flow profile and risk, and no property investment outcome is guaranteed."
     },
     {
-      title: "NCR Market Growth",
-      desc: "The Delhi NCR region is experiencing unprecedented infrastructural development. With new expressways, expanding metro networks, and the upcoming international airport, Noida and Gurgaon are rapidly transforming into global economic hubs, driving immense value into the property market."
+      title: "Research Noida and Delhi NCR Locations",
+      desc: "Transport and development plans can affect a location, but timelines, routes and market effects may change. Check current official updates and existing access, and compare local supply, services and demand before assigning value to a future project."
     },
     {
-      title: "Long-Term Appreciation",
-      desc: "We guide our clients toward properties with the strongest fundamentals. By investing in prime locations and premium developments, you secure assets that have historically demonstrated consistent, high-percentage value appreciation over the years."
+      title: "Model Costs and Resale Conditions",
+      desc: "Include stamp duty, registration, financing, taxes, maintenance, repairs and transaction costs in your analysis. Consider how long you may hold the asset and who a potential future buyer could be. Past price movement does not predict future appreciation."
     },
     {
-      title: "Rental Income Potential",
-      desc: "Generate robust and reliable cash flow. Our commercial and premium residential properties are located in high-demand zones, ensuring excellent tenant profiles, minimal vacancy rates, and superior rental yields year after year."
+      title: "Estimate Rental Income Carefully",
+      desc: "Estimate rent using recent comparable leases, then account for vacancy, tenant turnover, maintenance, furnishing, taxes and management costs. Rental yield in Noida varies by unit and market conditions; an estimate is not a promise of future income."
     },
     {
-      title: "Safe Investment Opportunities",
-      desc: "Your financial security is our priority. We exclusively recommend properties from renowned, financially stable developers with proven track records. Every investment opportunity is vetted through exhaustive legal and financial due diligence to eliminate risk."
+      title: "Complete Independent Due Diligence",
+      desc: "Property carries legal, construction, liquidity and market risks. Verify the promoter and project records, approvals, title, sanctioned plans, payment terms and possession status with official sources and qualified legal and financial professionals. Due diligence cannot eliminate every risk."
     }
   ];
 
@@ -39,15 +39,15 @@ export default function Investment() {
     <div className="w-full pt-32 pb-24 overflow-hidden">
       <div className="max-w-[1000px] mx-auto px-6 md:px-10">
         <FadeIn>
-          <h1 className="text-5xl md:text-7xl font-display mb-6 text-center">Investment Advisory</h1>
-          <p className="text-center text-muted max-w-2xl mx-auto mb-20 text-lg">Data-driven strategies to build a highly profitable real estate portfolio.</p>
+          <h1 className="text-5xl md:text-7xl font-display mb-6 text-center">Property Investment in Noida</h1>
+          <p className="text-center text-muted max-w-2xl mx-auto mb-20 text-lg">A practical framework for assessing property costs, documents, rental assumptions and risk in Noida and Delhi NCR. Returns are not guaranteed.</p>
         </FadeIn>
         
         <div className="space-y-16">
           {categories.map((cat, i) => (
             <FadeIn key={i} delay={0.1}>
               <div className="flex flex-col md:flex-row gap-8 items-start border-b border-stroke pb-16 last:border-0 last:pb-0 group cursor-default">
-                <h2 className="text-3xl font-display w-full md:w-1/3 shrink-0 group-hover:text-accent transition-colors duration-500">{cat.title}</h2>
+                <h2 className="text-3xl font-display w-full md:w-1/3 shrink-0 text-text-primary group-hover:opacity-80 transition-opacity duration-300">{cat.title}</h2>
                 <p className="text-muted leading-relaxed flex-1 text-lg group-hover:text-text-primary transition-colors duration-500">{cat.desc}</p>
               </div>
             </FadeIn>

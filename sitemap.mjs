@@ -1,4 +1,4 @@
-const siteUrl = 'https://agarwalandgehlotrealtors.com';
+const siteUrl = 'https://agarwalandgehlot.com';
 
 export const staticSitePaths = [
   '/', '/about', '/contact', '/services', '/residential', '/commercial', '/plots', '/investment', '/property-finder',
@@ -47,5 +47,5 @@ export function buildSitemap(blogs = [], categories = []) {
   for (const slug of authorSlugs) entries.set(`/author/${slug}`, null);
 
   const urls = [...entries].map(([path, lastmod]) => `  <url><loc>${escapeXml(`${siteUrl}${path}`)}</loc>${lastmod ? `<lastmod>${escapeXml(new Date(lastmod).toISOString().slice(0, 10))}</lastmod>` : ''}</url>`).join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }

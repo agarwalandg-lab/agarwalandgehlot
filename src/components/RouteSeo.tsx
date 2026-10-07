@@ -4,7 +4,7 @@ import { services } from '../data/services';
 import { canonicalProjectAliases, projectAliasSeo, projectSlugAliases, seoLandingPages } from '../data/seoLandingPages';
 import { useProjects } from '../data/projectStore';
 
-const siteUrl = 'https://agarwalandgehlotrealtors.com';
+const siteUrl = 'https://agarwalandgehlot.com';
 const siteName = 'Agarwal and Gehlot Realtors';
 
 const staticPages: Record<string, { title: string; description: string; image?: string }> = {

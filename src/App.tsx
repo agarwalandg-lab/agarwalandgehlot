@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -32,6 +33,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 export default function App() {
   return (
     <ErrorBoundary>
+      <LoadingScreen />
       <Router>
         <Suspense fallback={<div role="status" className="min-h-screen bg-bg px-6 pt-32 text-center text-muted">Loading property information...</div>}>
           <Routes>

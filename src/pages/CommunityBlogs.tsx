@@ -25,7 +25,6 @@ export default function CommunityBlogs() {
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    document.title = 'Community Real Estate Blogs | A&G Realtors';
     loadBlogs();
   }, []);
 

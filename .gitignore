@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Large media files — exceed GitHub's 100 MB limit
+public/video.mp4

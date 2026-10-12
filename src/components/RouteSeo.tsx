@@ -9,20 +9,20 @@ const siteName = 'Agarwal and Gehlot Realtors';
 
 const staticPages: Record<string, { title: string; description: string; image?: string }> = {
   '/': {
-    title: 'A&G Realtors | Premium Real Estate in Noida & Greater Noida',
-    description: 'A&G Realtors helps buyers explore residential and commercial property in Noida and Delhi NCR with clear project information and practical property advice.',
+    title: 'Real Estate Company in Noida, Flats in Noida - Agrawal and Gehlot Real Estate',
+    description: 'Discover premium properties in Noida with Agrawal and Gehlot Real Estate, a trusted real estate company in Noida. Explore The Best Luxury Flats in Noida.',
   },
   '/about': {
-    title: 'A&G Realtors | Real Estate Consultants in Noida',
-    description: 'Meet A&G Realtors, a property consultancy serving Noida and Delhi NCR. Learn about our approach to project research, buyer guidance and real estate advisory.',
+    title: 'About Us - Agrawal and Gehlot Real Estate',
+    description: 'Agrawal and Gehlot Real Estate helps you explore premium flats in Noida, property in Noida, and investment opportunities across Noida, Gurugram, and Delhi NCR.',
   },
   '/services': {
     title: 'Real Estate Services in Noida | A&G Realtors',
     description: 'Explore A&G property consulting services for residential, commercial, investment and home-buying requirements in Noida and Delhi NCR.',
   },
   '/projects': {
-    title: 'Residential Projects in Noida and Delhi NCR | A&G',
-    description: 'Compare residential projects in Noida and Delhi NCR by location, configuration, status and published project information with A&G Realtors.',
+    title: 'Our Projects - Agrawal and Gehlot Real Estate',
+    description: 'Explore more projects by Agrawal and Gehlot featuring premium residential and commercial properties in Noida.',
     image: '/cover/ivory-county.webp',
   },
   '/projects/gallery': {
@@ -34,32 +34,32 @@ const staticPages: Record<string, { title: string; description: string; image?: 
     description: 'Explore A&G Realtors insights on Noida and Greater Noida property, market updates, investment, buying guides and project news.',
   },
   '/community-blogs': {
-    title: 'Community Real Estate Blog & Forum | A&G Realtors',
-    description: 'Read real estate stories, buying guides, and property experiences shared directly by community members, buyers, and investors.',
+    title: 'Blogs and Updates - Agrawal and Gehlot Real Estate',
+    description: 'Read the latest real estate blogs, property market updates, buying guides, and investment insights from Agrawal and Gehlot Real Estate.',
   },
   '/residential': {
-    title: 'Residential Property in Noida and Delhi NCR | A&G',
-    description: 'Explore residential property and apartments in Noida and Delhi NCR. Compare project locations, configurations and availability with A&G Realtors.',
+    title: 'Residential Property in Noida - Agrawal and Gehlot',
+    description: 'Find the best residential properties in Noida with Agrawal and Gehlot Real Estate. Explore premium flats, apartments, and homes in prime locations.',
   },
   '/commercial': {
-    title: 'Commercial Property in Noida | A&G Realtors',
-    description: 'Explore commercial property, office space and retail opportunities in Noida and Delhi NCR. Verify current availability and terms before investing.',
+    title: 'Commercial Property in Noida - Agrawal and Gehlot',
+    description: 'Discover commercial property in Noida with Agrawal and Gehlot Real Estate. Explore office spaces, retail shops, and business properties for sale.',
   },
   '/plots': {
-    title: 'Plot Buying Advisory in Noida | A&G Realtors',
+    title: 'Plots for sale in Noida, Plots in Noida - Agrawal and Gehlot',
     description: 'Review plot buying considerations in Noida with A&G Realtors. Verify land use, title, approvals, access and current availability before purchase.',
   },
   '/investment': {
-    title: 'Property Investment Advisory in Noida | A&G Realtors',
-    description: 'Get practical property investment guidance for Noida and Delhi NCR, including project comparison, due diligence and risk considerations.',
+    title: 'Property Investment in Noida - Agrawal and Gehlot',
+    description: 'Property Investment in Noida with Agrawal and Gehlot Real Estate. Luxury Flats in Noida for Investment, and opportunities to suit your goals.',
   },
   '/contact': {
     title: 'Contact A&G Realtors in Noida | Property Consultation',
     description: 'Contact A&G Realtors for property consultation in Noida and Delhi NCR. Share your requirements and request current project or inventory details.',
   },
   '/property-finder': {
-    title: 'Find Property in Noida and Delhi NCR | A&G Realtors',
-    description: 'Search property information in Noida and Delhi NCR by location, budget, configuration and buying objective with A&G Realtors.',
+    title: 'Find Property in Noida and Delhi NCR - Agrawal and Gehlot',
+    description: 'Find the best properties in Noida and Delhi NCR with Agrawal and Gehlot Real Estate. Explore flats, apartments, luxury homes, and commercial properties.',
   },
   '/privacy-policy': {
     title: 'Privacy Policy | A&G Realtors',

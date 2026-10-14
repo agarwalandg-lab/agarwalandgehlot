@@ -65,9 +65,9 @@ export default function IvoryCountyMicrosite() {
   // Update Page Title and Meta description
   useEffect(() => {
     if (is3BhkLanding) {
-      document.title = '3 BHK Flat in Noida | Ivory County Sector 115 Luxury Residences | A&G Realtors';
+      document.title = 'Flats in Noida, 3 BHK Flats in Noida - agarwal and Gehlot Real Estate |Real Estate';
     } else {
-      document.title = 'Ivory County Sector 115 Noida | 3, 4 & 5 BHK Price, Floor Plans, RERA | A&G Realtors';
+      document.title = 'Flats in Sector 115 Noida, Ivory County Flats in Noida - agarwal and Gehlot | Real Estate';
     }
 
     // Inject SEO Meta tags
@@ -80,9 +80,16 @@ export default function IvoryCountyMicrosite() {
     metaDesc.setAttribute(
       'content',
       is3BhkLanding
-        ? 'Explore luxury 3 BHK flats at Ivory County Sector 115 Noida. 2,034 - 2,304 sq ft with large balconies, 11-acre central greens, dual clubhouses, 40:60 payment plan & verified UP RERA.'
-        : 'Discover Ivory County in Sector 115 Noida by County Group. Ultra-luxury 3, 4 & 5 BHK residences across 28 acres with 11 acres central greens, dual clubhouses, 40:60 payment plan & verified RERA details.'
+        ? 'Find the perfect flats in Noida with agarwal and Gehlot Realtors. Explore 3 BHK Flats in Noida in prime locations.'
+        : 'Explore flats in Sector 115, Noida, at Ivory County with agarwal and Gehlot. Discover premium apartments, modern amenities, and property options for your dream home or real estate investment.'
     );
+    let keywords = document.querySelector('meta[name="keywords"]');
+    if (!keywords) {
+      keywords = document.createElement('meta');
+      keywords.setAttribute('name', 'keywords');
+      document.head.appendChild(keywords);
+    }
+    keywords.setAttribute('content', is3BhkLanding ? 'Flats in Noida, 3 BHK Flats in Noida, agarwal and Gehlot Real Estate' : 'Flats in Sector 115 Noida, Ivory County Flats in Noida, agarwal and Gehlot');
   }, [is3BhkLanding]);
 
   const openModal = (type: ModalType = 'general', unitTitle?: string) => {

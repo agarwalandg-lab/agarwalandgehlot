@@ -14,10 +14,13 @@ const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 export default function PrivacyPolicy() {
   useEffect(() => {
-    document.title = 'Privacy Policy | A&G Realtors';
+    document.title = 'Privacy and Policy - agarwal and Gehlot | Real Estate';
     const description = document.querySelector('meta[name="description"]') ?? document.head.appendChild(document.createElement('meta'));
     description.setAttribute('name', 'description');
-    description.setAttribute('content', 'Read the Privacy Policy of A&G Realtors to understand how we collect, use, protect, and manage personal information submitted through our website.');
+    description.setAttribute('content', 'Learn how agarwal and Gehlot protects your privacy and handles personal information. Read our Privacy Policy to understand our data practices when using our real estate website and services.');
+    const keywords = document.querySelector('meta[name="keywords"]') ?? document.head.appendChild(document.createElement('meta'));
+    keywords.setAttribute('name', 'keywords');
+    keywords.setAttribute('content', 'Privacy Policy, agarwal and Gehlot, Real Estate');
     
     const canonical = document.querySelector('link[rel="canonical"]') ?? document.head.appendChild(document.createElement('link'));
     canonical.setAttribute('rel', 'canonical');

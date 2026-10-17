@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { X, CheckCircle2, Mail, User, Calendar, Home, ArrowRight, Download, ShieldCheck } from 'lucide-react';
 import { getUtmParams, trackEvent } from '../../utils/analytics';
+import { supabase } from '../../lib/supabase';
 
 const leadSchema = z.object({
   name: z.string().min(2, 'Please enter your full name (at least 2 characters)'),
@@ -45,20 +46,21 @@ export default function IvoryLeadModal({
     reset,
   } = useForm<LeadFormData>({
     defaultValues: {
-      configuration: unitTitle || '3 BHK Luxury Suite',
-      budgetRange: '₹3 Cr - ₹5 Cr',
+      configuration: unitTitle || '',
+      budgetRange: '',
     },
   });
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      reset({ configuration: unitTitle || '', budgetRange: '' });
       trackEvent('modal_open', { type, unitTitle, sourceSection });
     } else {
       document.body.style.overflow = '';
       setSubmitted(false);
       setCustomError({});
-      reset();
+      reset({ configuration: unitTitle || '', budgetRange: '' });
     }
     return () => {
       document.body.style.overflow = '';
@@ -112,7 +114,13 @@ export default function IvoryLeadModal({
 
   const onFormSubmit = async (formData: LeadFormData) => {
     setCustomError({});
-    const validation = leadSchema.safeParse(formData);
+    const normalizedFormData = {
+      ...formData,
+      name: formData.name.trim(),
+      phone: formData.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '').replace(/^91(\d{10})$/, '$1'),
+      email: formData.email.trim().toLowerCase(),
+    };
+    const validation = leadSchema.safeParse(normalizedFormData);
 
     if (!validation.success) {
       const errMap: Record<string, string> = {};
@@ -138,12 +146,35 @@ export default function IvoryLeadModal({
       timestamp: new Date().toISOString(),
     };
 
-    trackEvent('lead_submission', payload);
-
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const { error, data } = await supabase.from('ivory_county_leads').insert({
+        full_name: validation.data.name,
+        phone: validation.data.phone,
+        email: validation.data.email,
+        preferred_configuration: validation.data.configuration || null,
+        budget_expectation: validation.data.budgetRange || null,
+        preferred_visit_date: validation.data.preferredVisitDate || null,
+        message: validation.data.message || null,
+        project: payload.project,
+        modal_type: payload.modalType,
+        source_section: payload.sourceSection,
+        unit_title: payload.unitTitle || null,
+        utm_params: payload.utm,
+      }).select();
+
+      if (error) {
+        console.error('Supabase error details:', error);
+        throw error;
+      }
+
+      console.log('Lead saved successfully:', data);
+      trackEvent('lead_submission', {
+        project: payload.project,
+        modalType: payload.modalType,
+        sourceSection: payload.sourceSection,
+        unitTitle: payload.unitTitle,
+      });
       setSubmitted(true);
-      setLoading(false);
 
       if (type === 'brochure') {
         const link = document.createElement('a');
@@ -153,9 +184,12 @@ export default function IvoryLeadModal({
         link.click();
         document.body.removeChild(link);
       }
-    } catch {
+    } catch (error) {
+      console.error('Unable to save Ivory County enquiry:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setCustomError({ form: `Error: ${errorMessage}. Please try again or contact us on WhatsApp.` });
+    } finally {
       setLoading(false);
-      setSubmitted(true);
     }
   };
 
@@ -239,6 +273,7 @@ export default function IvoryLeadModal({
                   </span>
                   <input
                     type="tel"
+                    inputMode="numeric"
                     maxLength={10}
                     placeholder="10-digit mobile number"
                     {...register('phone')}
@@ -281,6 +316,15 @@ export default function IvoryLeadModal({
                     {...register('configuration')}
                     className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#222] py-3 px-3 text-sm text-white focus:border-[#B59A6A] focus:outline-none"
                   >
+                    <option value="">Select a configuration</option>
+                    {unitTitle && ![
+                      '3 BHK Luxury Suite (2,034 sq ft)',
+                      '3 BHK + Utility Grand (2,304 sq ft)',
+                      '4 BHK Grand Residence (2,727 sq ft)',
+                      '4 BHK Estate Suite (3,195 sq ft)',
+                      'Ivory Gold 4 BHK Palatial (3,987 sq ft)',
+                      'Ivory Gold 5 BHK Penthouse (6,939 sq ft)',
+                    ].includes(unitTitle) && <option value={unitTitle}>{unitTitle}</option>}
                     <option value="3 BHK Luxury Suite (2,034 sq ft)">3 BHK (2,034 sq ft)</option>
                     <option value="3 BHK + Utility Grand (2,304 sq ft)">3 BHK + Utility (2,304 sq ft)</option>
                     <option value="4 BHK Grand Residence (2,727 sq ft)">4 BHK Grand (2,727 sq ft)</option>
@@ -310,6 +354,7 @@ export default function IvoryLeadModal({
                       {...register('budgetRange')}
                       className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#222] py-3 px-3 text-sm text-white focus:border-[#B59A6A] focus:outline-none"
                     >
+                    <option value="">Select a budget range</option>
                       <option value="₹2.5 Cr - ₹3.5 Cr">₹2.5 Cr - ₹3.5 Cr</option>
                       <option value="₹3.5 Cr - ₹5 Cr">₹3.5 Cr - ₹5 Cr</option>
                       <option value="₹5 Cr - ₹8 Cr">₹5 Cr - ₹8 Cr</option>
@@ -333,6 +378,8 @@ export default function IvoryLeadModal({
                   </>
                 )}
               </button>
+
+              {customError.form && <p role="alert" className="text-center text-xs text-rose-400">{customError.form}</p>}
 
               <p className="text-center text-[11px] text-white/50">
                 🔒 Your privacy is 100% protected. No spam. A verified luxury advisor will contact you shortly.

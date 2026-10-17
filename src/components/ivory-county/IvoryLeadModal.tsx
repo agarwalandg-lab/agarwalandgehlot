@@ -147,6 +147,13 @@ export default function IvoryLeadModal({
     };
 
     try {
+      console.log('Attempting to save lead with data:', {
+        full_name: validation.data.name,
+        phone: validation.data.phone,
+        email: validation.data.email,
+        modal_type: payload.modalType,
+      });
+
       const { error, data } = await supabase.from('ivory_county_leads').insert({
         full_name: validation.data.name,
         phone: validation.data.phone,
@@ -161,6 +168,8 @@ export default function IvoryLeadModal({
         unit_title: payload.unitTitle || null,
         utm_params: payload.utm,
       }).select();
+
+      console.log('Supabase response:', { error, data });
 
       if (error) {
         console.error('Supabase error details:', error);
@@ -186,8 +195,31 @@ export default function IvoryLeadModal({
       }
     } catch (error) {
       console.error('Unable to save Ivory County enquiry:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      setCustomError({ form: `Error: ${errorMessage}. Please try again or contact us on WhatsApp.` });
+      console.error('Error type:', typeof error);
+      console.error('Error object:', JSON.stringify(error, null, 2));
+      
+      let errorMessage = 'Unknown error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object') {
+        errorMessage = JSON.stringify(error);
+      }
+      
+      // Fallback: Still allow brochure download even if database fails
+      if (type === 'brochure') {
+        const link = document.createElement('a');
+        link.href = '/project-details/ivory map.webp';
+        link.download = 'Ivory-County-Brochure-AG-Realtors.webp';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setSubmitted(true);
+        setCustomError({ form: 'Brochure downloaded (database save failed). Contact support.' });
+      } else {
+        setCustomError({ form: `Error: ${errorMessage}. Please try again or contact us on WhatsApp.` });
+      }
     } finally {
       setLoading(false);
     }

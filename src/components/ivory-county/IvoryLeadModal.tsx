@@ -1,20 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { X, CheckCircle2, ArrowRight } from 'lucide-react';
+import { X, CheckCircle2, Mail, User, Calendar, Home, ArrowRight, Download, ShieldCheck } from 'lucide-react';
 import { getUtmParams, trackEvent } from '../../utils/analytics';
 import { supabase } from '../../lib/supabase';
 
 const leadSchema = z.object({
+  name: z.string().min(2, 'Please enter your full name (at least 2 characters)'),
   phone: z
     .string()
     .regex(/^[6-9]\d{9}$/, 'Please enter a valid 10-digit Indian mobile number (e.g. 9876543210)'),
-  propertyType: z.string().optional(),
+  email: z.string().email('Please enter a valid email address'),
+  configuration: z.string().optional(),
+  preferredVisitDate: z.string().optional(),
+  budgetRange: z.string().optional(),
+  message: z.string().optional(),
 });
 
 export type LeadFormData = z.infer<typeof leadSchema>;
 
-export type ModalType = 'brochure' | 'price' | 'general';
+export type ModalType = 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general';
 
 interface IvoryLeadModalProps {
   isOpen: boolean;
@@ -41,20 +46,21 @@ export default function IvoryLeadModal({
     reset,
   } = useForm<LeadFormData>({
     defaultValues: {
-      propertyType: '',
+      configuration: unitTitle || '',
+      budgetRange: '',
     },
   });
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      reset({ propertyType: '' });
+      reset({ configuration: unitTitle || '', budgetRange: '' });
       trackEvent('modal_open', { type, unitTitle, sourceSection });
     } else {
       document.body.style.overflow = '';
       setSubmitted(false);
       setCustomError({});
-      reset({ propertyType: '' });
+      reset({ configuration: unitTitle || '', budgetRange: '' });
     }
     return () => {
       document.body.style.overflow = '';
@@ -67,26 +73,37 @@ export default function IvoryLeadModal({
     switch (type) {
       case 'brochure':
         return {
-          title: 'Request Price Sheet',
-          subtitle: 'EXCLUSIVE BUYER BENEFITS',
-          priceText: 'Price starts from ₹2.95 Cr*',
-          buttonText: 'GET INSTANT PRICE & BROCHURE →',
-          icon: ArrowRight,
+          title: 'Download Official E-Brochure',
+          subtitle: 'Receive the complete 48-page architectural catalog, floor blueprints & master layout instantly.',
+          buttonText: 'Download Brochure Now',
+          icon: Download,
         };
       case 'price':
         return {
-          title: 'Request Price Sheet',
-          subtitle: 'EXCLUSIVE BUYER BENEFITS',
-          priceText: 'Price starts from ₹2.95 Cr*',
-          buttonText: 'GET INSTANT PRICE & BROCHURE →',
+          title: 'Request Detailed Cost Sheet',
+          subtitle: 'Get all-inclusive price breakdown, floor rise charges, PLC & 40:60 payment schedules.',
+          buttonText: 'Get Instant Price Sheet',
           icon: ArrowRight,
+        };
+      case 'floorplan':
+        return {
+          title: `Get ${unitTitle || 'Residence'} Floor Plan`,
+          subtitle: 'Detailed architectural dimension drawings, carpet area breakdown & room layouts.',
+          buttonText: 'Send Floor Plans',
+          icon: Home,
+        };
+      case 'sitevisit':
+        return {
+          title: 'Schedule Private VIP Site Tour',
+          subtitle: 'Experience sample mock-up residences, tower elevations & clubhouse walkthrough with an A&G Advisor.',
+          buttonText: 'Confirm VIP Site Visit',
+          icon: Calendar,
         };
       default:
         return {
-          title: 'Request Price Sheet',
-          subtitle: 'EXCLUSIVE BUYER BENEFITS',
-          priceText: 'Price starts from ₹2.95 Cr*',
-          buttonText: 'GET INSTANT PRICE & BROCHURE →',
+          title: 'Enquire About Ivory County',
+          subtitle: 'Connect with a certified A&G Luxury Property Consultant for priority unit allocations.',
+          buttonText: 'Submit Enquiry',
           icon: ArrowRight,
         };
     }
@@ -99,7 +116,9 @@ export default function IvoryLeadModal({
     setCustomError({});
     const normalizedFormData = {
       ...formData,
+      name: formData.name.trim(),
       phone: formData.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '').replace(/^91(\d{10})$/, '$1'),
+      email: formData.email.trim().toLowerCase(),
     };
     const validation = leadSchema.safeParse(normalizedFormData);
 
@@ -122,20 +141,27 @@ export default function IvoryLeadModal({
       project: 'Ivory County Sector 115 Noida',
       modalType: type,
       sourceSection,
-      unitTitle: unitTitle || formData.propertyType,
+      unitTitle: unitTitle || formData.configuration,
       utm,
       timestamp: new Date().toISOString(),
     };
 
     try {
-      const { error, data } = await supabase.from('ivory_county_leads').insert({
-        full_name: 'Prospective Buyer',
+      console.log('Attempting to save lead with data:', {
+        full_name: validation.data.name,
         phone: validation.data.phone,
-        email: 'N/A',
-        preferred_configuration: validation.data.propertyType || null,
-        budget_expectation: null,
-        preferred_visit_date: null,
-        message: null,
+        email: validation.data.email,
+        modal_type: payload.modalType,
+      });
+
+      const { error, data } = await supabase.from('ivory_county_leads').insert({
+        full_name: validation.data.name,
+        phone: validation.data.phone,
+        email: validation.data.email,
+        preferred_configuration: validation.data.configuration || null,
+        budget_expectation: validation.data.budgetRange || null,
+        preferred_visit_date: validation.data.preferredVisitDate || null,
+        message: validation.data.message || null,
         project: payload.project,
         modal_type: payload.modalType,
         source_section: payload.sourceSection,
@@ -234,17 +260,44 @@ export default function IvoryLeadModal({
             <h2 id="modal-title" className="mt-2 text-2xl font-display md:text-3xl text-[#F5F1E8]">
               {header.title}
             </h2>
-            <p className="mt-2 text-lg font-semibold text-[#B59A6A]">
-              {header.priceText}
-            </p>
-            <p className="mt-1 text-sm text-[#DED3C1]/80 leading-relaxed">
+            <p className="mt-2 text-sm text-[#DED3C1]/80 leading-relaxed">
               {header.subtitle}
             </p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-3 border-y border-white/10 py-3 text-xs text-white/70">
+              <span className="inline-flex items-center gap-1.5 text-emerald-400">
+                <ShieldCheck size={15} /> UP RERA Approved
+              </span>
+              <span>•</span>
+              <span>Zero Brokerage</span>
+              <span>•</span>
+              <span>Direct Developer Allocation</span>
+            </div>
 
             <form onSubmit={handleSubmit(onFormSubmit)} className="mt-6 space-y-4">
               <div>
                 <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
-                  MOBILE NUMBER <span className="text-[#B59A6A]">*</span>
+                  Full Name <span className="text-[#B59A6A]">*</span>
+                </label>
+                <div className="relative mt-1.5">
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    {...register('name')}
+                    className={`w-full rounded-xl border bg-white/5 py-3 pl-11 pr-4 text-sm text-white placeholder-white/40 transition-colors focus:border-[#B59A6A] focus:bg-white/10 focus:outline-none ${
+                      customError.name ? 'border-rose-500' : 'border-white/15'
+                    }`}
+                  />
+                </div>
+                {customError.name && (
+                  <p className="mt-1 text-xs text-rose-400">{customError.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
+                  Mobile Number (India) <span className="text-[#B59A6A]">*</span>
                 </label>
                 <div className="relative mt-1.5">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-medium text-white/60">
@@ -254,7 +307,7 @@ export default function IvoryLeadModal({
                     type="tel"
                     inputMode="numeric"
                     maxLength={10}
-                    placeholder="Enter 10-digit number"
+                    placeholder="10-digit mobile number"
                     {...register('phone')}
                     className={`w-full rounded-xl border bg-white/5 py-3 pl-12 pr-4 text-sm text-white placeholder-white/40 transition-colors focus:border-[#B59A6A] focus:bg-white/10 focus:outline-none ${
                       customError.phone ? 'border-rose-500' : 'border-white/15'
@@ -267,35 +320,80 @@ export default function IvoryLeadModal({
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-3">
-                  SELECT PROPERTY TYPE
+                <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
+                  Email Address <span className="text-[#B59A6A]">*</span>
                 </label>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 p-4 rounded-xl border border-white/15 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                    <input
-                      type="radio"
-                      value="3-4-bhk"
-                      {...register('propertyType')}
-                      className="w-4 h-4 accent-[#B59A6A]"
-                    />
-                    <div>
-                      <div className="font-medium text-white">3 & 4 BHK</div>
-                      <div className="text-xs text-white/60">2,034 - 3,195 sq ft</div>
-                    </div>
-                  </label>
-                  <label className="flex items-center gap-3 p-4 rounded-xl border border-white/15 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                    <input
-                      type="radio"
-                      value="ivory-gold"
-                      {...register('propertyType')}
-                      className="w-4 h-4 accent-[#B59A6A]"
-                    />
-                    <div>
-                      <div className="font-medium text-white">Ivory Gold</div>
-                      <div className="text-xs text-white/60">3,987 - 6,939 sq ft</div>
-                    </div>
-                  </label>
+                <div className="relative mt-1.5">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+                  <input
+                    type="email"
+                    placeholder="name@example.com"
+                    {...register('email')}
+                    className={`w-full rounded-xl border bg-white/5 py-3 pl-11 pr-4 text-sm text-white placeholder-white/40 transition-colors focus:border-[#B59A6A] focus:bg-white/10 focus:outline-none ${
+                      customError.email ? 'border-rose-500' : 'border-white/15'
+                    }`}
+                  />
                 </div>
+                {customError.email && (
+                  <p className="mt-1 text-xs text-rose-400">{customError.email}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
+                    Preferred Configuration
+                  </label>
+                  <select
+                    {...register('configuration')}
+                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#222] py-3 px-3 text-sm text-white focus:border-[#B59A6A] focus:outline-none"
+                  >
+                    <option value="">Select a configuration</option>
+                    {unitTitle && ![
+                      '3 BHK Luxury Suite (2,034 sq ft)',
+                      '3 BHK + Utility Grand (2,304 sq ft)',
+                      '4 BHK Grand Residence (2,727 sq ft)',
+                      '4 BHK Estate Suite (3,195 sq ft)',
+                      'Ivory Gold 4 BHK Palatial (3,987 sq ft)',
+                      'Ivory Gold 5 BHK Penthouse (6,939 sq ft)',
+                    ].includes(unitTitle) && <option value={unitTitle}>{unitTitle}</option>}
+                    <option value="3 BHK Luxury Suite (2,034 sq ft)">3 BHK (2,034 sq ft)</option>
+                    <option value="3 BHK + Utility Grand (2,304 sq ft)">3 BHK + Utility (2,304 sq ft)</option>
+                    <option value="4 BHK Grand Residence (2,727 sq ft)">4 BHK Grand (2,727 sq ft)</option>
+                    <option value="4 BHK Estate Suite (3,195 sq ft)">4 BHK Estate (3,195 sq ft)</option>
+                    <option value="Ivory Gold 4 BHK Palatial (3,987 sq ft)">Ivory Gold 4 BHK (3,987+ sq ft)</option>
+                    <option value="Ivory Gold 5 BHK Penthouse (6,939 sq ft)">Ivory Gold 5 BHK (6,939 sq ft)</option>
+                  </select>
+                </div>
+
+                {type === 'sitevisit' ? (
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
+                      Preferred Date
+                    </label>
+                    <input
+                      type="date"
+                      {...register('preferredVisitDate')}
+                      className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#222] py-3 px-3 text-sm text-white focus:border-[#B59A6A] focus:outline-none"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-white/70">
+                      Budget Expectation
+                    </label>
+                    <select
+                      {...register('budgetRange')}
+                      className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#222] py-3 px-3 text-sm text-white focus:border-[#B59A6A] focus:outline-none"
+                    >
+                    <option value="">Select a budget range</option>
+                      <option value="₹2.5 Cr - ₹3.5 Cr">₹2.5 Cr - ₹3.5 Cr</option>
+                      <option value="₹3.5 Cr - ₹5 Cr">₹3.5 Cr - ₹5 Cr</option>
+                      <option value="₹5 Cr - ₹8 Cr">₹5 Cr - ₹8 Cr</option>
+                      <option value="₹8 Cr+ (Ivory Gold)">₹8 Cr+ (Ivory Gold)</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               <button
@@ -315,11 +413,9 @@ export default function IvoryLeadModal({
 
               {customError.form && <p role="alert" className="text-center text-xs text-rose-400">{customError.form}</p>}
 
-              <div className="mt-6 pt-4 border-t border-white/10 text-center">
-                <p className="text-[10px] text-white/40">
-                  RERA: UPRERAPRJ256314 &nbsp; T&C Apply*
-                </p>
-              </div>
+              <p className="text-center text-[11px] text-white/50">
+                🔒 Your privacy is 100% protected. No spam. A verified luxury advisor will contact you shortly.
+              </p>
             </form>
 
             <div className="mt-5 border-t border-white/10 pt-4 text-center">

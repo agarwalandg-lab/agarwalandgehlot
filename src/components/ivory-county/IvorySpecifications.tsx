@@ -3,7 +3,7 @@ import { Building, Home, Bed, Utensils, Droplet, Zap, ShieldCheck, ChevronDown, 
 import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 
 interface IvorySpecificationsProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvorySpecifications({ onOpenModal }: IvorySpecificationsProps) {

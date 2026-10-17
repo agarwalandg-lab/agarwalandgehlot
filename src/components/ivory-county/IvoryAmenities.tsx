@@ -4,7 +4,7 @@ import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryAmenitiesProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvoryAmenities({ onOpenModal }: IvoryAmenitiesProps) {
@@ -142,7 +142,7 @@ export default function IvoryAmenities({ onOpenModal }: IvoryAmenitiesProps) {
 
               <button
                 type="button"
-                onClick={() => onOpenModal('general')}
+                onClick={() => onOpenModal('sitevisit')}
                 className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-xs font-medium uppercase tracking-wider text-white hover:bg-white/10 transition cursor-pointer"
               >
                 Experience on Site Tour

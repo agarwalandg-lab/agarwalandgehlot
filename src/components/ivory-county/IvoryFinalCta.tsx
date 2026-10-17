@@ -3,7 +3,7 @@ import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryFinalCtaProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvoryFinalCta({ onOpenModal }: IvoryFinalCtaProps) {
@@ -64,7 +64,7 @@ export default function IvoryFinalCta({ onOpenModal }: IvoryFinalCtaProps) {
 
           <button
             type="button"
-            onClick={() => onOpenModal('general')}
+            onClick={() => onOpenModal('sitevisit')}
             className="flex items-center gap-2 rounded-full border border-[#B59A6A]/50 bg-[#B59A6A]/10 px-6 py-4 text-sm font-semibold uppercase tracking-wider text-[#F5F1E8] hover:bg-[#B59A6A] hover:text-black transition cursor-pointer"
           >
             <Calendar size={16} />

@@ -1,7 +1,7 @@
 import { Crown, Trees, Sparkles, Compass, ChevronRight } from 'lucide-react';
 
 interface IvoryFeaturesProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvoryFeatures({ onOpenModal }: IvoryFeaturesProps) {

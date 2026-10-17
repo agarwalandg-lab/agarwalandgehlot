@@ -2,7 +2,7 @@ import { MessageSquare, Calendar } from 'lucide-react';
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryFloatingActionsProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvoryFloatingActions({ onOpenModal }: IvoryFloatingActionsProps) {
@@ -15,7 +15,7 @@ export default function IvoryFloatingActions({ onOpenModal }: IvoryFloatingActio
       {/* Schedule Tour Floating Pill */}
       <button
         type="button"
-        onClick={() => onOpenModal('general')}
+        onClick={() => onOpenModal('sitevisit')}
         className="flex items-center gap-2 rounded-full border border-[#B59A6A]/40 bg-[#171717]/95 px-4 py-2.5 text-xs font-semibold text-[#F5F1E8] shadow-2xl backdrop-blur-md transition-all hover:scale-105 hover:border-[#B59A6A] hover:bg-[#221c17] cursor-pointer"
       >
         <Calendar size={15} className="text-[#B59A6A]" />

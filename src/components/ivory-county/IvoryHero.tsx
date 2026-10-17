@@ -3,7 +3,7 @@ import { Download, ArrowRight, Calendar, ShieldCheck, MapPin, Sparkles, ChevronD
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryHeroProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
 export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
@@ -110,7 +110,7 @@ export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
 
               <button
                 type="button"
-                onClick={() => onOpenModal('general')}
+                onClick={() => onOpenModal('sitevisit')}
                 className="flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-5 py-3.5 text-sm font-medium text-[#DED3C1] transition-all hover:bg-white/10 cursor-pointer"
               >
                 <Calendar size={15} />

@@ -78,12 +78,14 @@ export default function Admin() {
   const [about, setAbout] = useState<AboutContent>(defaultAbout);
   const [home, setHome] = useState<HomeContent>(defaultHome);
   const [tab, setTab] = useState<
-    "projects" | "website" | "about" | "employees"
+    "projects" | "website" | "about" | "employees" | "leads"
   >("projects");
   const [advanced, setAdvanced] = useState(false);
   const [json, setJson] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [leads, setLeads] = useState<any[]>([]);
+  const [loadingLeads, setLoadingLeads] = useState(false);
 
   // Mark home as intentionally unused for now - it's used in the website tab
   void home;
@@ -104,6 +106,24 @@ export default function Admin() {
       choose(items[0] || null);
     });
   }, [session]);
+
+  useEffect(() => {
+    if (tab === "leads" && supabase) {
+      setLoadingLeads(true);
+      supabase.from('ivory_county_leads')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100)
+        .then(({ data, error }) => {
+          if (error) {
+            setMessage(`Error loading leads: ${error.message}`);
+          } else {
+            setLeads(data || []);
+          }
+          setLoadingLeads(false);
+        });
+    }
+  }, [tab, supabase]);
 
   const choose = (project: ManagedProject | null) => {
     setCurrent(project);
@@ -363,9 +383,17 @@ export default function Admin() {
           >
             Employees
           </button>
+          <button
+            onClick={() => setTab("leads")}
+            className={`rounded-xl px-5 py-3 text-sm ${tab === "leads" ? "bg-surface text-text-primary" : "text-muted"}`}
+          >
+            Leads
+          </button>
         </div>
         {tab === "employees" ? (
           <EmployeeManagement />
+        ) : tab === "leads" ? (
+          <LeadsManagement leads={leads} loading={loadingLeads} />
         ) : tab === "website" ? (
           <HomeEditor />
         ) : tab === "about" ? (
@@ -962,6 +990,73 @@ function ProjectEditorSimple({ projects, setProjects }: { projects: ManagedProje
         </div>
         <p className="mt-4 text-sm text-amber-600">Note: Changes are local only. Configure Supabase to save to database.</p>
       </div>
+    </div>
+  );
+}
+
+function LeadsManagement({ leads, loading }: { leads: any[]; loading: boolean }) {
+  if (loading) {
+    return (
+      <div className="admin-panel mt-5 p-8">
+        <div className="flex items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-text-primary border-t-transparent"></div>
+          <span className="ml-3 text-muted">Loading leads...</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="admin-panel mt-5 p-6 md:p-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-display text-text-primary">Ivory County Leads</h2>
+        <div className="text-sm text-muted">
+          Total: {leads.length} leads
+        </div>
+      </div>
+
+      {leads.length === 0 ? (
+        <div className="text-center py-12 text-muted">
+          No leads submitted yet
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-stroke">
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Date</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Name</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Phone</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Email</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Type</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Configuration</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Budget</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.map((lead) => (
+                <tr key={lead.id} className="border-b border-stroke/50 hover:bg-surface/50">
+                  <td className="py-3 px-4 text-muted">
+                    {new Date(lead.created_at).toLocaleDateString('en-IN', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </td>
+                  <td className="py-3 px-4 text-text-primary">{lead.full_name}</td>
+                  <td className="py-3 px-4 text-text-primary">{lead.phone}</td>
+                  <td className="py-3 px-4 text-text-primary">{lead.email}</td>
+                  <td className="py-3 px-4 text-muted capitalize">{lead.modal_type}</td>
+                  <td className="py-3 px-4 text-muted">{lead.preferred_configuration || '-'}</td>
+                  <td className="py-3 px-4 text-muted">{lead.budget_expectation || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

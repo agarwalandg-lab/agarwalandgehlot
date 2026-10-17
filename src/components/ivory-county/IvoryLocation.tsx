@@ -4,7 +4,7 @@ import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryLocationProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
 }
 
 export default function IvoryLocation({ onOpenModal }: IvoryLocationProps) {
@@ -100,7 +100,7 @@ export default function IvoryLocation({ onOpenModal }: IvoryLocationProps) {
               </div>
               <button
                 type="button"
-                onClick={() => onOpenModal('sitevisit')}
+                onClick={() => onOpenModal('general')}
                 className="rounded-xl bg-[#B59A6A] px-4 py-2 text-xs font-bold text-black hover:bg-[#D4AF37] cursor-pointer"
               >
                 Get Driving Directions

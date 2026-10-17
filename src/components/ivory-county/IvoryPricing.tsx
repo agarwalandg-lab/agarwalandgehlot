@@ -1,7 +1,7 @@
 import { ShieldCheck, FileText } from 'lucide-react';
 
 interface IvoryPricingProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general', unitTitle?: string) => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
 }
 
 export default function IvoryPricing({ onOpenModal }: IvoryPricingProps) {

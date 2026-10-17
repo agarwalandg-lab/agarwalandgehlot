@@ -4,7 +4,7 @@ import { IVORY_COUNTY_DATA, ConfigurationItem } from '../../data/ivoryCountyData
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryFloorPlansProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general', unitTitle?: string) => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
   selectedConfig?: ConfigurationItem | null;
 }
 
@@ -130,7 +130,7 @@ export default function IvoryFloorPlans({ onOpenModal, selectedConfig }: IvoryFl
             <div className="space-y-3 pt-2">
               <button
                 type="button"
-                onClick={() => onOpenModal('floorplan', currentConfig.name)}
+                onClick={() => onOpenModal('brochure')}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] py-3.5 text-xs font-bold uppercase tracking-wider text-black shadow-lg shadow-[#B59A6A]/20 transition hover:scale-[1.02] cursor-pointer"
               >
                 <Download size={16} />
@@ -139,7 +139,7 @@ export default function IvoryFloorPlans({ onOpenModal, selectedConfig }: IvoryFl
 
               <button
                 type="button"
-                onClick={() => onOpenModal('price', currentConfig.name)}
+                onClick={() => onOpenModal('price')}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 py-3.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 transition cursor-pointer"
               >
                 <span>Request Unit Availability &amp; Cost Sheet</span>

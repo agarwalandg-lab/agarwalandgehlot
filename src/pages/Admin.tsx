@@ -1027,10 +1027,8 @@ function LeadsManagement({ leads, loading }: { leads: any[]; loading: boolean })
                 <th className="text-left py-3 px-4 font-medium text-text-primary">Date</th>
                 <th className="text-left py-3 px-4 font-medium text-text-primary">Name</th>
                 <th className="text-left py-3 px-4 font-medium text-text-primary">Phone</th>
-                <th className="text-left py-3 px-4 font-medium text-text-primary">Email</th>
+                <th className="text-left py-3 px-4 font-medium text-text-primary">Property Type</th>
                 <th className="text-left py-3 px-4 font-medium text-text-primary">Type</th>
-                <th className="text-left py-3 px-4 font-medium text-text-primary">Configuration</th>
-                <th className="text-left py-3 px-4 font-medium text-text-primary">Budget</th>
               </tr>
             </thead>
             <tbody>
@@ -1047,10 +1045,8 @@ function LeadsManagement({ leads, loading }: { leads: any[]; loading: boolean })
                   </td>
                   <td className="py-3 px-4 text-text-primary">{lead.full_name}</td>
                   <td className="py-3 px-4 text-text-primary">{lead.phone}</td>
-                  <td className="py-3 px-4 text-text-primary">{lead.email}</td>
-                  <td className="py-3 px-4 text-muted capitalize">{lead.modal_type}</td>
                   <td className="py-3 px-4 text-muted">{lead.preferred_configuration || '-'}</td>
-                  <td className="py-3 px-4 text-muted">{lead.budget_expectation || '-'}</td>
+                  <td className="py-3 px-4 text-muted capitalize">{lead.modal_type}</td>
                 </tr>
               ))}
             </tbody>

@@ -4,7 +4,7 @@ import { IVORY_COUNTY_DATA, ConfigurationItem } from '../../data/ivoryCountyData
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryConfigurationsProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general', unitTitle?: string) => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
   onSelectFloorPlan: (config: ConfigurationItem) => void;
 }
 
@@ -159,14 +159,14 @@ export default function IvoryConfigurations({
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
-                      onClick={() => onOpenModal('price', config.name)}
+                      onClick={() => onOpenModal('price')}
                       className="rounded-xl bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] py-2.5 px-3 text-center text-xs font-bold uppercase tracking-wider text-black transition hover:opacity-90 cursor-pointer"
                     >
                       Get Price Sheet
                     </button>
                     <button
                       type="button"
-                      onClick={() => onOpenModal('floorplan', config.name)}
+                      onClick={() => onOpenModal('brochure')}
                       className="rounded-xl border border-white/20 bg-white/5 py-2.5 px-3 text-center text-xs font-medium uppercase tracking-wider text-white hover:bg-white/10 transition cursor-pointer"
                     >
                       Floor Plan PDF

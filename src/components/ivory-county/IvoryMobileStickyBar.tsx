@@ -3,7 +3,7 @@ import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 import { trackEvent } from '../../utils/analytics';
 
 interface IvoryMobileStickyBarProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
 }
 
 export default function IvoryMobileStickyBar({ onOpenModal }: IvoryMobileStickyBarProps) {

@@ -3,7 +3,7 @@ import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 interface IvoryLifestyleProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
 }
 
 export default function IvoryLifestyle({ onOpenModal }: IvoryLifestyleProps) {
@@ -80,7 +80,7 @@ export default function IvoryLifestyle({ onOpenModal }: IvoryLifestyleProps) {
               <div className="pt-4 border-t border-white/10 flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={() => onOpenModal('sitevisit')}
+                  onClick={() => onOpenModal('general')}
                   className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B59A6A] hover:text-white transition-colors cursor-pointer"
                 >
                   <span>Book Private Tour</span>

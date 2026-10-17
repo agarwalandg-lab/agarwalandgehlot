@@ -2,7 +2,7 @@ import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
 
 interface IvoryAboutProps {
-  onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
+  onOpenModal: (type: 'brochure' | 'price' | 'general') => void;
 }
 
 export default function IvoryAbout({ onOpenModal }: IvoryAboutProps) {
@@ -52,7 +52,7 @@ export default function IvoryAbout({ onOpenModal }: IvoryAboutProps) {
             <div className="flex flex-wrap items-center gap-4 pt-4">
               <button
                 type="button"
-                onClick={() => onOpenModal('sitevisit')}
+                onClick={() => onOpenModal('general')}
                 className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-black transition hover:scale-105 shadow-md shadow-[#B59A6A]/20 cursor-pointer"
               >
                 <span>Schedule VIP Site Tour</span>

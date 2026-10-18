@@ -50,9 +50,9 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
             : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-2 sm:px-4 lg:px-6">
           {/* Brand Logo & Tag */}
-          <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
+          <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
               A&G
             </div>
@@ -72,7 +72,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden xl:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-center">
+          <nav className="hidden xl:flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-center">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -89,7 +89,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </nav>
 
           {/* Desktop Action CTAs */}
-          <div className="hidden xl:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-1.5 flex-shrink-0">
             <a
               href={`tel:${IVORY_COUNTY_DATA.projectOverview.contact.phoneRaw}`}
               onClick={() => trackEvent('phone_call_click', { source: 'header' })}

@@ -56,7 +56,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
               A&G
             </div>
-            <div className="hidden sm:block">
+            <div className="hidden lg:block">
               <div className="flex items-center gap-2">
                 <span className="font-display text-lg sm:text-xl font-bold tracking-wider text-[#F5F1E8]">
                   IVORY COUNTY
@@ -72,7 +72,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-center">
+          <nav className="hidden xl:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-center">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -89,7 +89,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </nav>
 
           {/* Desktop Action CTAs */}
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-2 flex-shrink-0">
             <a
               href={`tel:${IVORY_COUNTY_DATA.projectOverview.contact.phoneRaw}`}
               onClick={() => trackEvent('phone_call_click', { source: 'header' })}

@@ -1,204 +1,105 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Phone, Download, ArrowRight, ShieldCheck } from 'lucide-react';
-import { IVORY_COUNTY_DATA } from '../../data/ivoryCountyData';
-import { trackEvent } from '../../utils/analytics';
+import { FiMenu, FiX, FiChevronDown, FiArrowUpRight } from 'react-icons/fi';
 
 interface IvoryHeaderProps {
   onOpenModal: (type: 'brochure' | 'price' | 'floorplan' | 'sitevisit' | 'general') => void;
 }
 
+const mainNavigation = [
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'Community Blog', to: '/community-blogs' },
+  { label: 'Investment', to: '/investment' },
+  { label: 'Property', to: '/property-finder', hasDropdown: true },
+  { label: 'Services', to: '/services', hasDropdown: true },
+  { label: 'Enquire', to: '#', hasArrow: true },
+];
+
 export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
-    { label: 'Overview', href: '#overview' },
-    { label: 'Residences', href: '#configurations' },
-    { label: 'Floor Plans', href: '#floorplans' },
-    { label: 'Master Plan', href: '#masterplan' },
-    { label: 'Amenities', href: '#amenities' },
-    { label: 'Lifestyle', href: '#lifestyle' },
-    { label: 'Location', href: '#location' },
-    { label: 'Specs', href: '#specifications' },
-    { label: 'Developer', href: '#developer' },
-    { label: 'FAQs', href: '#faqs' },
-  ];
-
-  const handleNavClick = (href: string) => {
-    setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-[#171717]/90 backdrop-blur-md border-b border-[#B59A6A]/20 py-3 shadow-xl'
-            : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'
-        }`}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Brand Logo & Tag */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
-              A&G
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display text-lg sm:text-xl font-bold tracking-wider text-[#F5F1E8]">
-                  IVORY COUNTY
-                </span>
-                <span className="hidden rounded-full bg-[#B59A6A]/20 px-2 py-0.5 text-[10px] font-medium tracking-wide text-[#DED3C1] md:inline-block border border-[#B59A6A]/30">
-                  Sector 115 Noida
-                </span>
-              </div>
-              <p className="text-[10px] tracking-widest text-[#DED3C1]/60 uppercase">
-                By County Group • Marketed by A&G
-              </p>
-            </div>
-          </Link>
+    <nav className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 md:pt-6">
+      <div className="relative inline-flex max-w-full items-center rounded-full border border-[#E0E0E0] bg-[#F5F1E8]/95 backdrop-blur-sm px-2.5 py-1.5 shadow-md">
+        <Link
+          to="/"
+          aria-label="A&G Realtors home"
+          className="group relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full transition-transform hover:scale-105"
+        >
+          <div className="absolute inset-0 rounded-full border-2 border-[#5B9BD5] bg-white"></div>
+          <div className="relative flex h-full w-full items-center justify-center">
+            <img src="/logos/ag-logo.png" alt="A&G Realtors" className="h-6 w-6 object-contain" />
+          </div>
+        </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden xl:flex items-center gap-6 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(link.href);
-                }}
-                className="transition-colors hover:text-[#B59A6A] cursor-pointer"
+        <div className="mx-1.5 hidden h-5 w-px bg-[#E0E0E0] sm:block" />
+        <span className="hidden whitespace-nowrap text-xs font-semibold tracking-wide text-[#2C2C2C] sm:inline">Ivory County</span>
+
+        <div className="mx-2 hidden h-5 w-px bg-[#E0E0E0] lg:block" />
+        <div className="hidden items-center gap-1 lg:flex">
+          {mainNavigation.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium text-[#2C2C2C] transition-all hover:bg-[#E8E8E8] flex items-center gap-1 ${
+                item.label === 'Home' ? 'bg-[#2C2C2C] text-white' : ''
+              }`}
+            >
+              {item.label}
+              {item.hasDropdown && <FiChevronDown size={12} />}
+              {item.hasArrow && <FiArrowUpRight size={12} />}
+            </Link>
+          ))}
+        </div>
+
+        <div className="mx-2 h-5 w-px bg-[#E0E0E0]" />
+        <button
+          type="button"
+          onClick={() => onOpenModal('general')}
+          className="whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#2C2C2C] transition-all hover:bg-[#E8E8E8]"
+        >
+          Enquire <span className="text-[11px] text-[#2C2C2C]/80">→</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="ml-0.5 flex h-9 w-9 items-center justify-center rounded-full text-[#2C2C2C] transition-colors hover:bg-[#E8E8E8] lg:hidden"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+        </button>
+
+        {menuOpen && (
+          <div className="absolute left-0 right-0 top-[calc(100%+10px)] rounded-3xl border border-[#E0E0E0] bg-[#FAF7F2] p-3 text-[#2C2C2C] shadow-2xl lg:hidden">
+            {mainNavigation.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-xl px-4 py-3 text-sm font-semibold transition-colors hover:bg-[#EFEBE3] flex items-center justify-between"
               >
-                {link.label}
-              </a>
+                <span>{item.label}</span>
+                {item.hasDropdown && <FiChevronDown size={14} />}
+                {item.hasArrow && <FiArrowUpRight size={14} />}
+              </Link>
             ))}
-          </nav>
-
-          {/* Desktop Action CTAs */}
-          <div className="hidden sm:flex items-center gap-3">
-            <a
-              href={`tel:${IVORY_COUNTY_DATA.projectOverview.contact.phoneRaw}`}
-              onClick={() => trackEvent('phone_call_click', { source: 'header' })}
-              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-2 text-xs font-medium text-white transition hover:bg-white/15"
-            >
-              <Phone size={13} className="text-[#B59A6A]" />
-              <span>{IVORY_COUNTY_DATA.projectOverview.contact.phone}</span>
-            </a>
-
-            <button
-              type="button"
-              onClick={() => onOpenModal('brochure')}
-              className="flex items-center gap-1.5 rounded-full border border-[#B59A6A]/50 bg-[#B59A6A]/10 px-4 py-2 text-xs font-medium text-[#F5F1E8] transition hover:bg-[#B59A6A] hover:text-black cursor-pointer"
-            >
-              <Download size={13} />
-              <span>Brochure</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onOpenModal('price')}
-              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105 shadow-md shadow-[#B59A6A]/20 cursor-pointer"
-            >
-              <span>Get Price</span>
-              <ArrowRight size={13} />
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 xl:hidden">
-            <button
-              type="button"
-              onClick={() => onOpenModal('price')}
-              className="rounded-full bg-[#B59A6A] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-black sm:hidden"
-            >
-              Get Price
-            </button>
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white"
-              aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Slide-down Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/95 pt-24 pb-10 px-6 overflow-y-auto flex flex-col justify-between animate-in slide-in-from-top duration-300 xl:hidden">
-          <div className="space-y-6">
-            <div className="border-b border-white/10 pb-4">
-              <p className="text-xs uppercase tracking-[0.25em] text-[#B59A6A]">
-                Ivory County Noida
-              </p>
-              <p className="text-lg font-display text-white mt-1">
-                Luxury 3, 4 &amp; 5 BHK Residences
-              </p>
-            </div>
-
-            <nav className="grid grid-cols-2 gap-3 text-sm">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(link.href);
-                  }}
-                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-[#DED3C1] hover:border-[#B59A6A] hover:text-white"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-
-          <div className="mt-8 space-y-3 border-t border-white/10 pt-6">
             <button
               type="button"
               onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenModal('brochure');
+                setMenuOpen(false);
+                onOpenModal('general');
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#B59A6A] bg-[#B59A6A]/10 py-3.5 text-sm font-semibold text-[#F5F1E8]"
+              className="mt-2 w-full rounded-xl bg-[#2C2C2C] py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#FAF7F2]"
             >
-              <Download size={16} /> Download 48-Page Brochure
+              Enquire Now →
             </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenModal('sitevisit');
-              }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] py-3.5 text-sm font-semibold text-black"
-            >
-              Schedule VIP Site Tour
-            </button>
-
-            <div className="flex items-center justify-center gap-2 text-xs text-white/60 pt-2">
-              <ShieldCheck size={14} className="text-emerald-400" />
-              <span>UP RERA: UPRERAPRJ256314 / UPRERAPRJ115902</span>
-            </div>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </nav>
   );
 }

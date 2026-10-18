@@ -50,7 +50,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
             : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-2 sm:px-4 lg:px-6 pr-4 sm:pr-6 lg:pr-8">
+        <div className="flex w-full items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo & Tag */}
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
@@ -72,7 +72,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden xl:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-start pl-4">
+          <nav className="hidden 2xl:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-start pl-4">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -89,7 +89,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </nav>
 
           {/* Desktop Action CTAs */}
-          <div className="hidden xl:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden 2xl:flex items-center gap-2 flex-shrink-0">
             <a
               href={`tel:${IVORY_COUNTY_DATA.projectOverview.contact.phoneRaw}`}
               onClick={() => trackEvent('phone_call_click', { source: 'header' })}
@@ -119,7 +119,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
+          <div className="flex items-center gap-2 2xl:hidden flex-shrink-0">
             <button
               type="button"
               onClick={() => onOpenModal('price')}
@@ -141,7 +141,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
 
       {/* Mobile Slide-down Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/95 pt-24 pb-10 px-6 overflow-y-auto flex flex-col justify-between animate-in slide-in-from-top duration-300 xl:hidden">
+        <div className="fixed inset-0 z-40 bg-black/95 pt-24 pb-10 px-6 overflow-y-auto flex flex-col justify-between animate-in slide-in-from-top duration-300 2xl:hidden">
           <div className="space-y-6">
             <div className="border-b border-white/10 pb-4">
               <p className="text-xs uppercase tracking-[0.25em] text-[#B59A6A]">

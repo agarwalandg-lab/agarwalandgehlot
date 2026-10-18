@@ -31,18 +31,15 @@ export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
 
   return (
     <section className="relative min-h-[95vh] w-full flex items-center justify-center overflow-hidden bg-[#171717] pt-24 pb-16">
-      {/* Background Image with Cinematic Luxury Gradients */}
+      {/* Muted looping project film with readable, lighter overlays */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <img
-          src="/cover/ivory-county.webp"
-          alt="Ivory County Sector 115 Noida Luxury Residences"
-          fetchPriority="high"
-          className="h-full w-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/quMeEsT4gMs?autoplay=1&mute=1&controls=0&loop=1&playlist=quMeEsT4gMs&playsinline=1&rel=0&modestbranding=1"
+          title="Ivory County project film"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          tabIndex={-1}
         />
-        {/* Layered Overlays for Editorial Readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#171717] via-transparent to-black/70" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#B59A6A]/15 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-8">

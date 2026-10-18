@@ -52,16 +52,16 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo & Tag */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
               A&G
             </div>
-            <div>
+            <div className="hidden sm:block">
               <div className="flex items-center gap-2">
                 <span className="font-display text-lg sm:text-xl font-bold tracking-wider text-[#F5F1E8]">
                   IVORY COUNTY
                 </span>
-                <span className="hidden rounded-full bg-[#B59A6A]/20 px-2 py-0.5 text-[10px] font-medium tracking-wide text-[#DED3C1] md:inline-block border border-[#B59A6A]/30">
+                <span className="hidden lg:inline-block rounded-full bg-[#B59A6A]/20 px-2 py-0.5 text-[10px] font-medium tracking-wide text-[#DED3C1] border border-[#B59A6A]/30">
                   Sector 115 Noida
                 </span>
               </div>
@@ -72,7 +72,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden xl:flex items-center gap-6 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80">
+          <nav className="hidden lg:flex items-center gap-4 text-xs font-medium uppercase tracking-widest text-[#DED3C1]/80 flex-1 justify-center">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -81,7 +81,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
                   e.preventDefault();
                   handleNavClick(link.href);
                 }}
-                className="transition-colors hover:text-[#B59A6A] cursor-pointer"
+                className="transition-colors hover:text-[#B59A6A] cursor-pointer whitespace-nowrap"
               >
                 {link.label}
               </a>
@@ -89,29 +89,29 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </nav>
 
           {/* Desktop Action CTAs */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             <a
               href={`tel:${IVORY_COUNTY_DATA.projectOverview.contact.phoneRaw}`}
               onClick={() => trackEvent('phone_call_click', { source: 'header' })}
-              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-2 text-xs font-medium text-white transition hover:bg-white/15"
+              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/15"
             >
               <Phone size={13} className="text-[#B59A6A]" />
-              <span>{IVORY_COUNTY_DATA.projectOverview.contact.phone}</span>
+              <span className="hidden md:inline">{IVORY_COUNTY_DATA.projectOverview.contact.phone}</span>
             </a>
 
             <button
               type="button"
               onClick={() => onOpenModal('brochure')}
-              className="flex items-center gap-1.5 rounded-full border border-[#B59A6A]/50 bg-[#B59A6A]/10 px-4 py-2 text-xs font-medium text-[#F5F1E8] transition hover:bg-[#B59A6A] hover:text-black cursor-pointer"
+              className="flex items-center gap-1.5 rounded-full border border-[#B59A6A]/50 bg-[#B59A6A]/10 px-3 py-2 text-xs font-medium text-[#F5F1E8] transition hover:bg-[#B59A6A] hover:text-black cursor-pointer"
             >
               <Download size={13} />
-              <span>Brochure</span>
+              <span className="hidden sm:inline">Brochure</span>
             </button>
 
             <button
               type="button"
               onClick={() => onOpenModal('price')}
-              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105 shadow-md shadow-[#B59A6A]/20 cursor-pointer"
+              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#B59A6A] to-[#D4AF37] px-3 py-2 text-xs font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105 shadow-md shadow-[#B59A6A]/20 cursor-pointer"
             >
               <span>Get Price</span>
               <ArrowRight size={13} />
@@ -119,7 +119,7 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 xl:hidden">
+          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
             <button
               type="button"
               onClick={() => onOpenModal('price')}

@@ -36,7 +36,7 @@ export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
         <iframe
           src="https://www.youtube-nocookie.com/embed/quMeEsT4gMs?autoplay=1&mute=1&controls=0&loop=1&playlist=quMeEsT4gMs&playsinline=1&rel=0&modestbranding=1"
           title="Ivory County project film"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[max(100%,56.25vw)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0"
           allow="autoplay; encrypted-media; picture-in-picture"
           tabIndex={-1}
         />
@@ -55,15 +55,15 @@ export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl xl:text-7xl font-display font-medium text-white tracking-tight leading-[1.08]">
+            <h1 className="inline-block max-w-full rounded-r-2xl border-l-4 border-[#D4AF37] bg-black/65 px-5 py-4 text-4xl font-display font-medium leading-[1.08] tracking-tight text-white shadow-2xl backdrop-blur-sm sm:text-6xl xl:text-7xl">
               IVORY COUNTY
-              <span className="block text-2xl sm:text-3xl xl:text-4xl font-light text-[#DED3C1] mt-2 font-serif italic">
+              <span className="mt-2 block text-2xl font-serif font-light italic text-[#F5F1E8] sm:text-3xl xl:text-4xl">
                 A New Expression of Architectural Grandeur
               </span>
             </h1>
 
             {/* Subtitle & Value Proposition */}
-            <p className="text-base sm:text-lg text-[#DED3C1]/85 max-w-2xl leading-relaxed font-light">
+            <p className="max-w-2xl rounded-lg bg-black/50 px-4 py-3 text-base font-light leading-relaxed text-white shadow-lg backdrop-blur-sm sm:text-lg">
               28 acres of low-density luxury living enveloped by 11+ acres of lush botanical greens. Featuring ultra-spacious 3, 4 &amp; 5 BHK residences, dual landmark clubhouses, and bespoke private sky decks.
             </p>
 

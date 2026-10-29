@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Download, ArrowRight, Calendar, ShieldCheck, MapPin, Sparkles, ChevronDown } from 'lucide-react';
 import { trackEvent } from '../../utils/analytics';
 
@@ -9,6 +9,18 @@ interface IvoryHeroProps {
 export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
   const [phone, setPhone] = useState('');
   const [quickSent, setQuickSent] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
+  );
+  const projectFilmUrl = 'https://www.youtube-nocookie.com/embed/quMeEsT4gMs?autoplay=1&mute=1&controls=0&loop=1&playlist=quMeEsT4gMs&playsinline=1&rel=0&modestbranding=1';
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const updateLayout = () => setIsDesktop(mediaQuery.matches);
+    updateLayout();
+    mediaQuery.addEventListener('change', updateLayout);
+    return () => mediaQuery.removeEventListener('change', updateLayout);
+  }, []);
 
   const handleQuickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,19 +42,44 @@ export default function IvoryHero({ onOpenModal }: IvoryHeroProps) {
   };
 
   return (
-    <section className="relative min-h-[95vh] w-full flex items-center justify-center overflow-hidden bg-[#171717] pt-24 pb-16">
-      {/* Muted looping project film with readable, lighter overlays */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/quMeEsT4gMs?autoplay=1&mute=1&controls=0&loop=1&playlist=quMeEsT4gMs&playsinline=1&rel=0&modestbranding=1"
-          title="Ivory County project film"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[max(100%,56.25vw)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          tabIndex={-1}
-        />
-      </div>
+    <section className="relative min-h-screen w-full overflow-hidden bg-[#171717] pb-20 pt-24 lg:flex lg:min-h-[95vh] lg:items-center lg:justify-center lg:pb-16">
+      {/* On large screens the film covers the hero without changing its 16:9 ratio. */}
+      {isDesktop && (
+        <div className="absolute inset-0 z-0 overflow-hidden [container-type:size]">
+          <iframe
+            src={projectFilmUrl}
+            title="Ivory County project film"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-0"
+            style={{
+              width: 'max(100cqw, 177.78cqh)',
+              height: 'max(56.25cqw, 100cqh)',
+            }}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            tabIndex={-1}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/30" />
+        </div>
+      )}
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-8">
+        {/* On smaller screens the whole film stays visible instead of being stretched and cropped. */}
+        {!isDesktop && (
+          <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl border border-[#B59A6A]/35 bg-black shadow-2xl">
+            <iframe
+              src={projectFilmUrl}
+              title="Ivory County project walkthrough"
+              className="pointer-events-none absolute inset-0 h-full w-full border-0"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              tabIndex={-1}
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/75 to-transparent" />
+            <span className="pointer-events-none absolute bottom-3 left-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+              Ivory County project walkthrough · Sound off
+            </span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Main Hero Typography & CTAs (Cols 1-7) */}
           <div className="lg:col-span-7 space-y-6">

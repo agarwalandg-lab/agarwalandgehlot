@@ -4,6 +4,7 @@ dist/
 .env
 .env.*
 !.env.example
+supabase/.temp/
 
 # Large media files — exceed GitHub's 100 MB limit
 public/video.mp4

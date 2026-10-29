@@ -53,8 +53,12 @@ export default function IvoryHeader({ onOpenModal }: IvoryHeaderProps) {
         <div className="flex w-full items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo & Tag */}
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg shadow-md transition-transform group-hover:scale-105">
-              A&G
+            <div className="h-11 w-11 overflow-hidden rounded-xl border border-[#B59A6A]/60 bg-[#F5F1E8] p-0.5 shadow-md transition-transform group-hover:scale-105">
+              <img
+                src="/logos/ag-logo.png"
+                alt="A&G Realtors"
+                className="h-full w-full rounded-[0.6rem] object-contain"
+              />
             </div>
             <div className="hidden lg:block">
               <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import IvoryHeader from '../components/ivory-county/IvoryHeader';
@@ -27,7 +27,8 @@ import { IVORY_COUNTY_DATA, ConfigurationItem } from '../data/ivoryCountyData';
 
 export default function IvoryCountyMicrosite() {
   const location = useLocation();
-  const is3BhkLanding = location.pathname === '/3bhk-flat';
+  const siteUrl = 'https://agarwalandgehlot.com';
+  const canonicalUrl = `${siteUrl}/projects/ivory-county`;
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -39,6 +40,24 @@ export default function IvoryCountyMicrosite() {
   });
 
   const [selectedFloorPlan, setSelectedFloorPlan] = useState<ConfigurationItem | null>(null);
+
+  // This microsite sits outside the shared Layout, so it owns its scroll reset.
+  useLayoutEffect(() => {
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    const frame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.history.scrollRestoration = previousRestoration;
+    };
+  }, [location.pathname]);
 
   // Initialize Lenis Smooth Scrolling
   useEffect(() => {
@@ -62,35 +81,50 @@ export default function IvoryCountyMicrosite() {
     };
   }, []);
 
-  // Update Page Title and Meta description
+  // Project-specific SEO for every Ivory County alias route.
   useEffect(() => {
-    if (is3BhkLanding) {
-      document.title = 'Flats in Noida, 3 BHK Flats in Noida - agarwal and Gehlot Real Estate |Real Estate';
-    } else {
-      document.title = 'Flats in Sector 115 Noida, Ivory County Flats in Noida - agarwal and Gehlot | Real Estate';
-    }
+    const title = 'Ivory County Sector 115 Noida | Price, Floor Plan & RERA';
+    const description = 'Explore Ivory County Sector 115 Noida: 3, 4 and 5 BHK floor plans, amenities, RERA details, location and current price and inventory on request.';
+    const imageUrl = `${siteUrl}/cover/ivory-county.webp`;
 
-    // Inject SEO Meta tags
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute(
-      'content',
-      is3BhkLanding
-        ? 'Find the perfect flats in Noida with agarwal and Gehlot Realtors. Explore 3 BHK Flats in Noida in prime locations.'
-        : 'Explore flats in Sector 115, Noida, at Ivory County with agarwal and Gehlot. Discover premium apartments, modern amenities, and property options for your dream home or real estate investment.'
+    const setMeta = (selector: string, attribute: 'name' | 'property', key: string, content: string) => {
+      let element = document.head.querySelector<HTMLMetaElement>(selector);
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attribute, key);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
+
+    document.title = title;
+    setMeta('meta[name="description"]', 'name', 'description', description);
+    setMeta(
+      'meta[name="keywords"]',
+      'name',
+      'keywords',
+      'Ivory County, Ivory County Sector 115 Noida, Ivory County price, Ivory County floor plan, Ivory County 3 BHK, Ivory County 4 BHK, Ivory County 5 BHK, Ivory Gold, County Group Noida',
     );
-    let keywords = document.querySelector('meta[name="keywords"]');
-    if (!keywords) {
-      keywords = document.createElement('meta');
-      keywords.setAttribute('name', 'keywords');
-      document.head.appendChild(keywords);
+    setMeta('meta[name="robots"]', 'name', 'robots', 'index,follow,max-image-preview:large');
+    setMeta('meta[property="og:type"]', 'property', 'og:type', 'website');
+    setMeta('meta[property="og:site_name"]', 'property', 'og:site_name', 'Agarwal and Gehlot Realtors');
+    setMeta('meta[property="og:title"]', 'property', 'og:title', title);
+    setMeta('meta[property="og:description"]', 'property', 'og:description', description);
+    setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+    setMeta('meta[property="og:image"]', 'property', 'og:image', imageUrl);
+    setMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
+    setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+    setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+    setMeta('meta[name="twitter:image"]', 'name', 'twitter:image', imageUrl);
+
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
     }
-    keywords.setAttribute('content', is3BhkLanding ? 'Flats in Noida, 3 BHK Flats in Noida, agarwal and Gehlot Real Estate' : 'Flats in Sector 115 Noida, Ivory County Flats in Noida, agarwal and Gehlot');
-  }, [is3BhkLanding]);
+    canonical.href = canonicalUrl;
+  }, [canonicalUrl, siteUrl]);
 
   const openModal = (type: ModalType = 'general', unitTitle?: string) => {
     setModalState({
@@ -118,19 +152,10 @@ export default function IvoryCountyMicrosite() {
     '@graph': [
       {
         '@type': 'RealEstateListing',
-        name: is3BhkLanding ? '3 BHK Flats in Noida - Ivory County' : 'Ivory County Sector 115 Noida',
-        description: is3BhkLanding
-          ? 'Luxury 3 BHK flats at Ivory County Sector 115, Noida. 2,034 - 2,304 sq ft with large balconies, 11-acre botanical greens, dual clubhouses, and verified UP RERA.'
-          : 'Ultra-luxury 3, 4 & 5 BHK residential project in Sector 115, Noida by County Group, featuring 28 acres master estate, 11 acres botanical greens, and dual clubhouses.',
-        url: is3BhkLanding ? 'https://agarwalandgehlotrealtors.com/3bhk-flat' : 'https://agarwalandgehlotrealtors.com/projects/ivory-county',
-        image: 'https://agarwalandgehlotrealtors.com/cover/ivory-county.webp',
-        offers: {
-          '@type': 'AggregateOffer',
-          priceCurrency: 'INR',
-          lowPrice: '29500000',
-          offerCount: '2372',
-          priceValidUntil: '2027-12-31',
-        },
+        name: 'Ivory County Sector 115 Noida',
+        description: 'Luxury 3, 4 and 5 BHK residences at Ivory County in Sector 115, Noida, with floor plans, amenities, location and RERA information.',
+        url: canonicalUrl,
+        image: `${siteUrl}/cover/ivory-county.webp`,
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Sector 115, FNG Corridor',
@@ -163,19 +188,19 @@ export default function IvoryCountyMicrosite() {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://agarwalandgehlotrealtors.com',
+            item: siteUrl,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Projects',
-            item: 'https://agarwalandgehlotrealtors.com/projects',
+            item: `${siteUrl}/projects`,
           },
           {
             '@type': 'ListItem',
             position: 3,
             name: 'Ivory County Sector 115 Noida',
-            item: 'https://agarwalandgehlotrealtors.com/projects/ivory-county',
+            item: canonicalUrl,
           },
         ],
       },

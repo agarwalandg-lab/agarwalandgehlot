@@ -16,8 +16,12 @@ export default function IvoryFooter() {
           {/* Brand & About (Cols 1-2) */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#B59A6A] to-[#8C7348] text-black font-serif font-bold text-lg">
-                A&amp;G
+              <div className="h-11 w-11 overflow-hidden rounded-xl border border-[#B59A6A]/60 bg-[#F5F1E8] p-0.5">
+                <img
+                  src="/logos/ag-logo.png"
+                  alt="A&G Realtors"
+                  className="h-full w-full rounded-[0.6rem] object-contain"
+                />
               </div>
               <div>
                 <span className="font-display text-lg font-bold tracking-wider text-[#F5F1E8]">

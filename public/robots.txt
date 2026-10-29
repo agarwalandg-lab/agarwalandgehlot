@@ -5,4 +5,4 @@ Disallow: /9654322224
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://agarwalandgehlotrealtors.com/sitemap.xml
+Sitemap: https://agarwalandgehlot.com/sitemap.xml

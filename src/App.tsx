@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
@@ -26,7 +26,7 @@ const BlogAdmin = lazy(() => import('./pages/BlogAdmin'));
 const CommunityBlogs = lazy(() => import('./pages/CommunityBlogs'));
 const Admin = lazy(() => import('./pages/Admin'));
 const EmployeePortal = lazy(() => import('./pages/EmployeePortal'));
-const IvoryCountyMicrosite = lazy(() => import('./pages/IvoryCountyMicrosite'));
+const ThreeBhkLandingPage = lazy(() => import('./pages/ThreeBhkLandingPage'));
 const ThankYou = lazy(() => import('./pages/ThankYou'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -42,11 +42,8 @@ export default function App() {
             <Route path="/admin/blogs" element={<BlogAdmin />} />
             <Route path="/admin/blog" element={<BlogAdmin />} />
             <Route path="/thankyou" element={<ThankYou />} />
-            <Route path="/3bhk-flat" element={<IvoryCountyMicrosite />} />
-            <Route path="/projects/ivory-county" element={<IvoryCountyMicrosite />} />
-            <Route path="/projects/ivory-county-sector-115-noida" element={<IvoryCountyMicrosite />} />
-            <Route path="/ivory-county" element={<IvoryCountyMicrosite />} />
-            <Route path="/ivory-county-sector-115-noida" element={<IvoryCountyMicrosite />} />
+            <Route path="/ivory-county" element={<Navigate to="/projects/ivory-county" replace />} />
+            <Route path="/ivory-county-sector-115-noida" element={<Navigate to="/projects/ivory-county" replace />} />
             <Route path="*" element={<Layout><Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -71,6 +68,7 @@ export default function App() {
               <Route path="/property-investment-noida" element={<SeoLandingPage path="/property-investment-noida" />} />
               <Route path="/luxury-properties-noida" element={<SeoLandingPage path="/luxury-properties-noida" />} />
               <Route path="/property-near-noida-airport" element={<SeoLandingPage path="/property-near-noida-airport" />} />
+              <Route path="/3bhk-flat" element={<ThreeBhkLandingPage />} />
               <Route path="/property-finder" element={<PropertyFinder />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="*" element={<NotFound />} />
